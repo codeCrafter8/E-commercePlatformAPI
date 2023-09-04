@@ -1,9 +1,14 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.service;
 
-import com.electricalvehicles.appuser.request.CreateAppUserRequest;
-import com.electricalvehicles.appuser.request.UpdateAppUserRequest;
-import com.electricalvehicles.exception.DuplicateResourceException;
-import com.electricalvehicles.exception.ResourceNotFoundException;
+import com.ecommerce.dto.AppUserDto;
+import com.ecommerce.mapper.AppUserMapper;
+import com.ecommerce.model.AppUser;
+import com.ecommerce.payload.request.CreateAppUserRequest;
+import com.ecommerce.payload.request.UpdateAppUserRequest;
+import com.ecommerce.exception.DuplicateResourceException;
+import com.ecommerce.exception.ResourceNotFoundException;
+import com.ecommerce.repository.AppUserRepository;
+import com.ecommerce.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +23,7 @@ import java.util.stream.Collectors;
 public class AppUserService implements UserDetailsService {
     private final String USER_NOT_FOUND_MSG = "User with email %s not found.";
     private final AppUserRepository appUserRepository;
+    private final VendorRepository vendorRepository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return appUserRepository.findByEmail(email)
@@ -60,8 +66,10 @@ public class AppUserService implements UserDetailsService {
         user.setFirstName(updateRequest.firstName());
         user.setLastName(updateRequest.lastName());
 
+        //TODO: exception vendor email ? (switch normal account to vendor account)
         if (updateRequest.email() != null && !updateRequest.email().equals(user.getEmail())) {
-            if (appUserRepository.existsByEmail(updateRequest.email())) {
+            if (appUserRepository.existsByEmail(updateRequest.email())
+                || vendorRepository.existsByEmail(updateRequest.email())) {
                 throw new DuplicateResourceException(
                         "Email already taken."
                 );

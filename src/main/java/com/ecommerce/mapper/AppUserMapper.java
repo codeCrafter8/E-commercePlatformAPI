@@ -1,6 +1,9 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.mapper;
 
-import com.electricalvehicles.appuser.request.CreateAppUserRequest;
+import com.ecommerce.dto.AppUserDto;
+import com.ecommerce.enumeration.AppUserRole;
+import com.ecommerce.model.AppUser;
+import com.ecommerce.payload.request.CreateAppUserRequest;
 
 public final class AppUserMapper {
     public static AppUserDto map(final AppUser appUser) {

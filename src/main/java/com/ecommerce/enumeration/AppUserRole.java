@@ -1,4 +1,4 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.enumeration;
 
 public enum AppUserRole {
     USER,

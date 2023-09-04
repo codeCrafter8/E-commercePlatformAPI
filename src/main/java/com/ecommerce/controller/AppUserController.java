@@ -1,7 +1,10 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.controller;
 
-import com.electricalvehicles.appuser.request.CreateAppUserRequest;
-import com.electricalvehicles.appuser.request.UpdateAppUserRequest;
+import com.ecommerce.dto.AppUserDto;
+import com.ecommerce.payload.request.CreateAppUserRequest;
+import com.ecommerce.payload.request.CreateVendorRequest;
+import com.ecommerce.payload.request.UpdateAppUserRequest;
+import com.ecommerce.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +30,6 @@ public class AppUserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    //TODO: what to return
     @PostMapping
     public ResponseEntity<Long> createUser(@RequestBody CreateAppUserRequest createRequest) {
         Long savedUserId = appUserService.createUser(createRequest);

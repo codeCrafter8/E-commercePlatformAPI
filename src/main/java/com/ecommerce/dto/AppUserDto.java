@@ -1,4 +1,4 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.dto;
 
 public record AppUserDto(
         Long id,

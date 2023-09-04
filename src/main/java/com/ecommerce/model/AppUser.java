@@ -1,7 +1,9 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.model;
 
+import com.ecommerce.enumeration.AppUserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,8 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 public class AppUser implements UserDetails {
 
@@ -26,10 +31,24 @@ public class AppUser implements UserDetails {
             generator = "user_sequence"
     )
     private Long id;
+    @Column(
+            nullable = false
+    )
     private String firstName;
+    @Column(
+            nullable = false
+    )
     private String lastName;
+    @Column(
+            unique = true,
+            nullable = false
+    )
     private String email;
+    @Column(
+            nullable = false
+    )
     private String password;
+    private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
     private boolean locked;

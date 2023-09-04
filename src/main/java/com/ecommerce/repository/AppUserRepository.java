@@ -1,5 +1,6 @@
-package com.electricalvehicles.appuser;
+package com.ecommerce.repository;
 
+import com.ecommerce.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
