@@ -2,6 +2,7 @@ package com.ecommerce.model;
 
 import com.ecommerce.enumeration.AppUserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,15 +12,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-
-import static jakarta.persistence.CascadeType.ALL;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 public class AppUser implements UserDetails {
-
     @SequenceGenerator(
             name = "user_sequence",
             sequenceName = "user_sequence",
@@ -31,35 +30,43 @@ public class AppUser implements UserDetails {
             generator = "user_sequence"
     )
     private Long id;
-    @Column(
-            nullable = false
-    )
+    @NotBlank
     private String firstName;
-    @Column(
-            nullable = false
-    )
+    @NotBlank
     private String lastName;
     @Column(
-            unique = true,
-            nullable = false
+            unique = true
     )
-    private String email;
+    @NotBlank
+    private String username;
+    //TODO: czy zostawic taka walidacje unique?
     @Column(
-            nullable = false
+            unique = true
     )
+    @NotBlank
+    private String email;
+    @NotBlank
     private String password;
+    //czy na pewno?
+    @Column(
+            unique = true
+    )
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
+    @OneToMany(mappedBy="appUser")
+    private Set<Product> products;
     private boolean locked;
     private boolean enabled;
     public AppUser(String firstName,
                    String lastName,
+                   String username,
                    String email,
                    String password,
                    AppUserRole appUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
@@ -83,7 +90,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

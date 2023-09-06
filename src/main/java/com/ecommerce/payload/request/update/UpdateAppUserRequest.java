@@ -1,4 +1,4 @@
-package com.ecommerce.payload.request;
+package com.ecommerce.payload.request.update;
 
 public record UpdateAppUserRequest(
     String firstName,

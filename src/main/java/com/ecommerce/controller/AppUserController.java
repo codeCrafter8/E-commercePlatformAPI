@@ -1,9 +1,8 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.AppUserDto;
-import com.ecommerce.payload.request.CreateAppUserRequest;
-import com.ecommerce.payload.request.CreateVendorRequest;
-import com.ecommerce.payload.request.UpdateAppUserRequest;
+import com.ecommerce.payload.request.create.CreateAppUserRequest;
+import com.ecommerce.payload.request.update.UpdateAppUserRequest;
 import com.ecommerce.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
