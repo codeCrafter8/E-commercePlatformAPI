@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -34,12 +36,16 @@ public class Product {
     @Size(min = 3, message = "Title must contains at least 3 characters.")
     private String title;
     @NotNull
-    private float price;
+    private Float price;
     @NotBlank
     @Size(min = 5, message = "Title must contains at least 5 characters.")
     private String description;
-    @NotBlank
-    private String category;
+    @ManyToOne(
+            fetch = FetchType.EAGER,
+            optional = false,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
     @Enumerated(EnumType.STRING)
     private ProductState state;
     //TODO: shipment size?
@@ -49,7 +55,7 @@ public class Product {
             String title,
             float price,
             String description,
-            String category,
+            Category category,
             ProductState state
     ){
         this.appUser = appUser;

@@ -1,5 +1,6 @@
 package com.ecommerce.controller;
 
+import com.ecommerce.dto.ProductDto;
 import com.ecommerce.model.Product;
 import com.ecommerce.payload.request.create.CreateProductRequest;
 import com.ecommerce.payload.request.update.UpdateProductRequest;
@@ -16,15 +17,16 @@ import java.util.List;
 @RequestMapping("api/v1/products")
 public class ProductController {
     private final ProductService productService;
+    //TODO: return ProductDto or Product?
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long productId) {
-        Product product = productService.getProductById(productId);
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long productId) {
+        ProductDto product = productService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 

@@ -1,11 +1,11 @@
 package com.ecommerce.payload.request.create;
 
 public record CreateProductRequest(
-        String username,
+        Long appUserId,
         String title,
-        float price,
+        Float price,
         String description,
-        String category,
+        Long categoryId,
         String state
 ) {
 }

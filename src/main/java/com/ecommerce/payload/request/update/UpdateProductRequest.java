@@ -1,12 +1,10 @@
 package com.ecommerce.payload.request.update;
 
-import com.ecommerce.enumeration.ProductState;
-
 public record UpdateProductRequest(
         String title,
-        float price,
+        Float price,
         String description,
-        String category,
+        Long categoryId,
         String state
 ) {
 }
