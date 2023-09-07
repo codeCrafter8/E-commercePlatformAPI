@@ -31,7 +31,6 @@ public class Product {
             cascade = CascadeType.ALL)
     @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser appUser;
-    //TODO: test this
     @NotBlank
     @Size(min = 3, message = "Title must contains at least 3 characters.")
     private String title;
@@ -48,8 +47,11 @@ public class Product {
     private Category category;
     @Enumerated(EnumType.STRING)
     private ProductState state;
+    @ManyToMany(mappedBy = "favoriteProducts")
+    private Set<AppUser> favoredBy;
+    @OneToOne(mappedBy = "product")
+    private Order order;
     //TODO: shipment size?
-
     public Product(
             AppUser appUser,
             String title,

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,7 +48,7 @@ public class AppUser implements UserDetails {
     private String email;
     @NotBlank
     private String password;
-    //czy na pewno?
+    //TODO: czy na pewno?
     @Column(
             unique = true
     )
@@ -56,6 +57,15 @@ public class AppUser implements UserDetails {
     private AppUserRole appUserRole;
     @OneToMany(mappedBy="appUser")
     private Set<Product> products;
+    //TODO: favorites in controller
+    @ManyToMany
+    @JoinTable(
+            name = "favorites",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> favoriteProducts;
+    @OneToMany(mappedBy = "appUser")
+    private Set<Order> orders;
     private boolean locked;
     private boolean enabled;
     public AppUser(String firstName,

@@ -9,15 +9,17 @@ import com.ecommerce.payload.request.CategoryRequest;
 import com.ecommerce.payload.request.create.CreateProductRequest;
 
 public class CategoryMapper {
-    public static Category map(final CategoryRequest createRequest){
+    public static Category map(final CategoryRequest createRequest, final Category parent){
         return new Category(
-                createRequest.title()
+                createRequest.title(),
+                parent
         );
     }
-    public static CategoryDto map(final Category category){
+    public static CategoryDto map(final Category category, final Long parentId){
         return new CategoryDto(
                 category.getId(),
-                category.getTitle()
+                category.getTitle(),
+                parentId
         );
     }
 }

@@ -23,7 +23,7 @@ public class ProductMapper {
         );
     }
 
-    public static Product map(final CreateProductRequest createRequest, AppUser appUser, Category category){
+    public static Product map(final CreateProductRequest createRequest, final AppUser appUser, final Category category){
         return new Product(
                 appUser,
                 createRequest.title(),

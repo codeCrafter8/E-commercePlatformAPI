@@ -34,7 +34,7 @@ public class AppUserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public AppUserDto getUserById(final Long userId) {
+    public AppUserDto getUserById(final Long userId){
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User with id [%s] not found".formatted(userId))

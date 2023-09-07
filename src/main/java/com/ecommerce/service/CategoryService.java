@@ -20,7 +20,11 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        return categories.stream().map(CategoryMapper::map)
+        return categories.stream()
+                .map(category -> {
+                    Long parentId = category.getParent() == null ? -1 : category.getParent().getId();
+                    return CategoryMapper.map(category, parentId);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -29,11 +33,21 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product with id [%s] not found".formatted(categoryId))
                 );
-        return CategoryMapper.map(category);
+
+        Long parentId = category.getParent() == null ? -1 : category.getParent().getId();
+        return CategoryMapper.map(category, parentId);
     }
 
     public Long createCategory(CategoryRequest createRequest) {
-        Category category = CategoryMapper.map(createRequest);
+        Category parent = null;
+        if(createRequest.parentId() != null) {
+            parent = categoryRepository.findById(createRequest.parentId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Category with id [%s] not found".formatted(createRequest.parentId()))
+                    );
+        }
+
+        Category category = CategoryMapper.map(createRequest, parent);
         category = categoryRepository.save(category);
 
         return category.getId();

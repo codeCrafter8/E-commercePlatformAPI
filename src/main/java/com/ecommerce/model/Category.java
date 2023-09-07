@@ -28,22 +28,23 @@ public class Category {
     @NotBlank
     @Size(min = 3, message = "Title must contains at least 3 characters.")
     private String title;
-    private String imageURL;
     @OneToMany(mappedBy="category")
     private Set<Product> products;
-
-    public Category(
-            String title
-    ){
-        this.title = title;
-    }
+    //TODO: co z imageURL?
     //TODO: zostawic?
     //private Boolean enabled;
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    @OrderBy("title asc")
-    private Set<Category> children = new HashSet<>();*/
+    //@OrderBy("title asc")
+    private Set<Category> children;
+    public Category(
+            String title,
+            Category parent
+    ){
+        this.title = title;
+        this.parent = parent;
+    }
 }
