@@ -1,7 +1,6 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.CategoryDto;
-import com.ecommerce.model.Category;
 import com.ecommerce.payload.request.CategoryRequest;
 import com.ecommerce.service.CategoryService;
 import lombok.RequiredArgsConstructor;

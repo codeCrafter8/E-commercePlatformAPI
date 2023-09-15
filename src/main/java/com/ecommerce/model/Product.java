@@ -25,46 +25,45 @@ public class Product {
             generator = "product_sequence"
     )
     private Long id;
-    @ManyToOne(
+    /*@ManyToOne(
             fetch = FetchType.EAGER,
             optional = false,
             cascade = CascadeType.ALL)
     @JoinColumn(name = "app_user_id", nullable = false)
-    private AppUser appUser;
+    private AppUser appUser;*/
     @NotBlank
     @Size(min = 3, message = "Title must contains at least 3 characters.")
     private String title;
-    @NotNull
-    private Float price;
-    @NotBlank
-    @Size(min = 5, message = "Title must contains at least 5 characters.")
-    private String description;
+    /*@NotNull
+    private Float price;*/
+    /*@NotBlank
+    @Size(min = 5, message = "Description must contains at least 5 characters.")
+    private String description;*/
     @ManyToOne(
-            fetch = FetchType.EAGER,
             optional = false,
             cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    @Enumerated(EnumType.STRING)
-    private ProductState state;
+    @NotBlank(message = "ean")
+    //TODO: unique
+    private String EAN;
+    /*@Enumerated(EnumType.STRING)
+    private ProductState state;*/
     @ManyToMany(mappedBy = "favoriteProducts")
     private Set<AppUser> favoredBy;
-    @OneToOne(mappedBy = "product")
-    private Order order;
+    /*@OneToOne(mappedBy = "product")
+    private Order order;*/
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    private Set<Offer> offers;
+
     //TODO: shipment size?
     public Product(
-            AppUser appUser,
             String title,
-            float price,
-            String description,
             Category category,
-            ProductState state
+            String EAN
     ){
-        this.appUser = appUser;
         this.title = title;
-        this.price = price;
-        this.description = description;
         this.category = category;
-        this.state = state;
+        this.EAN = EAN;
     }
 }

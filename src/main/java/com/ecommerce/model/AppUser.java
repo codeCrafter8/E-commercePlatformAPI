@@ -55,8 +55,8 @@ public class AppUser implements UserDetails {
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
-    @OneToMany(mappedBy="appUser")
-    private Set<Product> products;
+    /*@OneToMany(mappedBy="appUser")
+    private Set<Product> products;*/
     //TODO: favorites in controller
     @ManyToMany
     @JoinTable(
@@ -98,6 +98,7 @@ public class AppUser implements UserDetails {
         return password;
     }
 
+    //TODO: login by username or EMAIL
     @Override
     public String getUsername() {
         return username;

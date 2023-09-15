@@ -1,7 +1,6 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.ProductDto;
-import com.ecommerce.model.Product;
 import com.ecommerce.payload.request.create.CreateProductRequest;
 import com.ecommerce.payload.request.update.UpdateProductRequest;
 import com.ecommerce.service.ProductService;

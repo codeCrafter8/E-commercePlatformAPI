@@ -9,9 +9,11 @@ import com.ecommerce.exception.DuplicateResourceException;
 import com.ecommerce.exception.ResourceNotFoundException;
 import com.ecommerce.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +22,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class AppUserService implements UserDetailsService {
-    private final String USER_NOT_FOUND_MSG = "User with email %s not found.";
+    private final String USER_NOT_FOUND_MSG = "User with username %s not found.";
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return appUserRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AppUser appUser = appUserRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
+
+        return new User(appUser.getUsername(), appUser.getPassword(), appUser.getAuthorities());
     }
 
     public List<AppUserDto> getAllUsers() {
@@ -48,7 +53,9 @@ public class AppUserService implements UserDetailsService {
             throw new DuplicateResourceException("Email already taken");
         }
 
-        AppUser user = AppUserMapper.map(createRequest);
+        String password = passwordEncoder.encode(createRequest.password());
+
+        AppUser user = AppUserMapper.map(createRequest, password);
         user = appUserRepository.save(user);
 
         return user.getId();

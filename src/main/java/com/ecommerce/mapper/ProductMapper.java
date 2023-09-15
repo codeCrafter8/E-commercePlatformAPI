@@ -14,23 +14,17 @@ public class ProductMapper {
     public static ProductDto map(final Product product) {
         return new ProductDto(
                 product.getId(),
-                product.getAppUser().getId(),
                 product.getTitle(),
-                product.getDescription(),
                 product.getCategory().getId(),
-                product.getState(),
-                product.getPrice()
+                product.getEAN()
         );
     }
 
-    public static Product map(final CreateProductRequest createRequest, final AppUser appUser, final Category category){
+    public static Product map(final CreateProductRequest createRequest, final Category category){
         return new Product(
-                appUser,
                 createRequest.title(),
-                createRequest.price(),
-                createRequest.description(),
                 category,
-                ProductState.valueOf(createRequest.state())
+                createRequest.EAN()
         );
     }
 }

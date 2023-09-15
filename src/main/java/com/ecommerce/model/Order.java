@@ -19,9 +19,8 @@ public class Order {
             strategy = GenerationType.SEQUENCE,
             generator = "order_sequence"
     )
-    private Long idd;
+    private Long id;
     @ManyToOne(
-            fetch = FetchType.EAGER,
             optional = false,
             cascade = CascadeType.ALL
     )

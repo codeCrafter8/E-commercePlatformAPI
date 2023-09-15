@@ -42,17 +42,17 @@ public class ProductService {
     }
 
     public Long createProduct(CreateProductRequest createRequest) {
-        AppUser user = appUserRepository.findById(createRequest.appUserId())
+        /*AppUser user = appUserRepository.findById(createRequest.appUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User with id [%s] not found".formatted(createRequest.appUserId()))
-                );
+                );*/
 
         Category category = categoryRepository.findById(createRequest.categoryId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Category with id [%s] not found".formatted(createRequest.categoryId()))
                 );
 
-        Product product = ProductMapper.map(createRequest, user, category);
+        Product product = ProductMapper.map(createRequest, category);
         product = productRepository.save(product);
 
         return product.getId();
@@ -71,10 +71,7 @@ public class ProductService {
                 );
 
         product.setTitle(updateRequest.title());
-        product.setPrice(updateRequest.price());
-        product.setDescription(updateRequest.description());
         product.setCategory(category);
-        product.setState(ProductState.valueOf(updateRequest.state()));
 
         productRepository.save(product);
     }
