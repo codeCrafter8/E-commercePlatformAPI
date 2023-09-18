@@ -1,8 +1,6 @@
 package com.ecommerce.fetcher;
 
 import com.ecommerce.service.OfferService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,16 +38,28 @@ public class EbayFetcher {
         HttpResponse<String> response = null;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-        List<Float> prices = getPrice(response.body());
-        for(Float price : prices) {
-            System.out.println(price);
-            offerService.createOffer("Ebay", price, EAN);
+        if(response != null && getCount(response.body()) > 0) {
+            List<Float> prices = getPrice(response.body());
+            for (Float price : prices) {
+                offerService.createOffer("Ebay", price, EAN);
+            }
         }
+    }
+
+    private int getCount(String responseBody) {
+        int count = 0;
+        try {
+            JSONObject jsonObject = new JSONObject(responseBody);
+            JSONObject findItemsAdvancedResponse = jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0);
+            JSONObject searchResult = findItemsAdvancedResponse.getJSONArray("searchResult").getJSONObject(0);
+            count = Integer.parseInt(searchResult.getString("@count"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     private List<Float> getPrice(String responseBody) {

@@ -63,6 +63,7 @@ public class AppUserService implements UserDetailsService {
         String password = passwordEncoder.encode(createRequest.password());
 
         AppUser user = AppUserMapper.map(createRequest, password);
+        user.setEnabled(true);
         user = appUserRepository.save(user);
 
         return user.getId();

@@ -24,6 +24,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,9 @@ public class OfferService {
                 );
 
         List<Offer> offers = offerRepository.findAllByProduct(product);
-        return offers.stream().map(OfferMapper::map)
+        return offers.stream()
+                .sorted(Comparator.comparingDouble(Offer::getPrice))
+                .map(OfferMapper::map)
                 .collect(Collectors.toList());
     }
 
