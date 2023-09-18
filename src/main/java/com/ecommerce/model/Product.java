@@ -53,8 +53,8 @@ public class Product {
     private Set<AppUser> favoredBy;
     /*@OneToOne(mappedBy = "product")
     private Order order;*/
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    private Set<Offer> offers;
+    /*@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    private Set<Offer> offers;*/
 
     //TODO: shipment size?
     public Product(

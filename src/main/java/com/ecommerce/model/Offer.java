@@ -22,6 +22,7 @@ public class Offer {
     private Long id;
     private String shopName;
     private Float price;
+    //TODO: Many to one optional = false?
     @ManyToOne(
             optional = false,
             cascade = CascadeType.MERGE)

@@ -22,13 +22,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class AppUserService implements UserDetailsService {
-    private final String USER_NOT_FOUND_MSG = "User with username %s not found.";
+    private final String USER_NOT_FOUND_MSG = "User with username [%s] not found.";
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
+
+        //TODO: Czy to na pewno ok?
+        if(!appUser.isEnabled()) {
+            throw new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username));
+        }
 
         return new User(appUser.getUsername(), appUser.getPassword(), appUser.getAuthorities());
     }
@@ -52,6 +57,8 @@ public class AppUserService implements UserDetailsService {
         if(userExists){
             throw new DuplicateResourceException("Email already taken");
         }
+
+        //TODO: add username check
 
         String password = passwordEncoder.encode(createRequest.password());
 
@@ -85,5 +92,8 @@ public class AppUserService implements UserDetailsService {
 
     public void deleteUser(final Long userId) {
         appUserRepository.deleteById(userId);
+    }
+    public void enableUser(AppUser appUser) {
+
     }
 }

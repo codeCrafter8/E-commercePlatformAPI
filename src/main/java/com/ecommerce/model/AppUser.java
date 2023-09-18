@@ -64,8 +64,8 @@ public class AppUser implements UserDetails {
             joinColumns = @JoinColumn(name = "app_user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> favoriteProducts;
-    @OneToMany(mappedBy = "appUser")
-    private Set<Order> orders;
+    /*@OneToMany(mappedBy = "appUser")
+    private Set<Order> orders;*/
     private boolean locked;
     private boolean enabled;
     public AppUser(String firstName,

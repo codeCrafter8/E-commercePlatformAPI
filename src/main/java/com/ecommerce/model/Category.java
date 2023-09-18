@@ -28,8 +28,8 @@ public class Category {
     @NotBlank
     @Size(min = 3, message = "Title must contains at least 3 characters.")
     private String title;
-    @OneToMany(mappedBy="category")
-    private Set<Product> products;
+    /*@OneToMany(mappedBy="category")
+    private Set<Product> products;*/
     //TODO: co z imageURL?
     //TODO: zostawic?
     //private Boolean enabled;
@@ -37,9 +37,9 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent")
+    /*@OneToMany(mappedBy = "parent")
     //@OrderBy("title asc")
-    private Set<Category> children;
+    private Set<Category> children;*/
     public Category(
             String title,
             Category parent
