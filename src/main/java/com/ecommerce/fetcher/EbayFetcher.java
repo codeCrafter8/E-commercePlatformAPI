@@ -38,6 +38,7 @@ public class EbayFetcher {
         HttpResponse<String> response = null;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

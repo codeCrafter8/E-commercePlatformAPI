@@ -16,7 +16,6 @@ public class AmazonFetcher {
     private final OfferService offerService;
     public void fetch(String EAN) {
         //TODO: jak nie po ean to po nazwie?
-        //todo: co jak produkt w amazonie nie istnieje
         String url = "https://www.amazon.pl/s/ref=sr_st_featured-rank?keywords=" + EAN;
         Document document = null;
         try {
