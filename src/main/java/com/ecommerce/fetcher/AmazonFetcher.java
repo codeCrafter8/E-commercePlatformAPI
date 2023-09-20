@@ -26,13 +26,16 @@ public class AmazonFetcher {
         }
         Elements elements = document.select("span.a-price-whole");
         if(!elements.isEmpty()) {
+            //TODO: only first?
             Element priceWholeElement = elements.first();
             Element priceFractionElement = document.select("span.a-price-fraction").first();
             String priceText = priceWholeElement.text().substring(0, priceWholeElement.text().length() - 1) +
                     "." + priceFractionElement.text();
             Float price = Float.valueOf(priceText);
 
-            offerService.createOffer("Amazon", price, EAN);
+            String sourceOfferId = document.getElementsByClass("sg-col-4-of-24 sg-col-4-of-12 s-result-item s-asin sg-col-4-of-16 sg-col s-widget-spacing-small sg-col-4-of-20").attr("data-asin");
+
+            offerService.createOrUpdateOffer("Amazon", sourceOfferId, price, EAN);
         }
     }
 }

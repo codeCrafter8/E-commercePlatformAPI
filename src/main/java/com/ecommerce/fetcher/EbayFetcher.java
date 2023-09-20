@@ -43,9 +43,21 @@ public class EbayFetcher {
             e.printStackTrace();
         }
         if(response != null && getCount(response.body()) > 0) {
-            List<Float> prices = getPrice(response.body());
-            for (Float price : prices) {
-                offerService.createOffer("Ebay", price, EAN);
+            JSONArray items = getItems(response.body());
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+
+                JSONArray sellingStatus = item.getJSONArray("sellingStatus");
+                JSONObject sellingStatusObj = sellingStatus.getJSONObject(0);
+                JSONArray convertedCurrentPrice = sellingStatusObj.getJSONArray("convertedCurrentPrice");
+                JSONObject convertedPriceObj = convertedCurrentPrice.getJSONObject(0);
+                String convertedCurrentPriceValue = convertedPriceObj.getString("__value__");
+                Float price = Float.valueOf(convertedCurrentPriceValue);
+
+                JSONArray itemId = item.getJSONArray("itemId");
+                String sourceOfferId = itemId.get(0).toString();
+
+                offerService.createOrUpdateOffer("Ebay", sourceOfferId, price, EAN);
             }
         }
     }
@@ -63,27 +75,16 @@ public class EbayFetcher {
         return count;
     }
 
-    private List<Float> getPrice(String responseBody) {
-        List<Float> prices = new ArrayList<>();
+    private JSONArray getItems(String responseBody) {
+        JSONArray items = null;
         try {
             JSONObject jsonObject = new JSONObject(responseBody);
             JSONArray findItemsAdvancedResponse = jsonObject.getJSONArray("findItemsAdvancedResponse");
             JSONArray searchResult = findItemsAdvancedResponse.getJSONObject(0).getJSONArray("searchResult");
-            JSONArray items = searchResult.getJSONObject(0).getJSONArray("item");
-
-            for (int i = 0; i < items.length(); i++) {
-                JSONObject item = items.getJSONObject(i);
-                JSONArray sellingStatus = item.getJSONArray("sellingStatus");
-                JSONObject sellingStatusObj = sellingStatus.getJSONObject(0);
-                JSONArray convertedCurrentPrice = sellingStatusObj.getJSONArray("convertedCurrentPrice");
-                JSONObject convertedPriceObj = convertedCurrentPrice.getJSONObject(0);
-                String convertedCurrentPriceValue = convertedPriceObj.getString("__value__");
-
-                prices.add(Float.valueOf(convertedCurrentPriceValue));
-            }
+            items = searchResult.getJSONObject(0).getJSONArray("item");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return prices;
+        return items;
     }
 }

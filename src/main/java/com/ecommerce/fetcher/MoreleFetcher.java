@@ -16,7 +16,6 @@ public class MoreleFetcher {
     private final OfferService offerService;
     public void fetch(String EAN) {
         //TODO: jak nie po ean to po nazwie?
-        //todo: co jak produkt w amazonie nie istnieje
         String url = "https://www.morele.net/wyszukiwarka/?q=" + EAN;
         Document document = null;
         try {
@@ -32,7 +31,9 @@ public class MoreleFetcher {
 
             Float price = Float.valueOf(priceText);
 
-            offerService.createOffer("Morele", price, EAN);
+            String sourceOfferId = document.getElementsByClass("cat-product card").attr("data-product-id");
+
+            offerService.createOrUpdateOffer("Morele", sourceOfferId, price, EAN);
         }
     }
 }

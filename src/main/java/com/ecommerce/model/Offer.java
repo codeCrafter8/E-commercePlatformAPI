@@ -1,11 +1,13 @@
 package com.ecommerce.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Offer {
@@ -20,7 +22,10 @@ public class Offer {
             generator = "offer_sequence"
     )
     private Long id;
-    private String shopName;
+    @NotBlank
+    private String source;
+    @NotBlank
+    private String sourceOfferId;
     private Float price;
     //TODO: Many to one optional = false?
     @ManyToOne(
@@ -29,17 +34,14 @@ public class Offer {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     public Offer(
-            String shopName,
+            String source,
+            String sourceOfferId,
             Float price,
             Product product
     ) {
-        this.shopName = shopName;
+        this.source = source;
+        this.sourceOfferId = sourceOfferId;
         this.price = price;
         this.product = product;
-    }
-
-    @Override
-    public String toString() {
-        return this.id + " " + this.shopName + " " + this.price;
     }
 }

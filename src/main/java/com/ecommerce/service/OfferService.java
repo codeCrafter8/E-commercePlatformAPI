@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -32,17 +33,29 @@ public class OfferService {
                 .collect(Collectors.toList());
     }
 
-    public void createOffer(String shopName, Float price, String EAN) {
-        Product product = productRepository.findByEAN(EAN)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Product with EAN [%s] not found".formatted(EAN))
-                );
+    public void createOrUpdateOffer(String source, String sourceOfferId, Float price, String EAN) {
+        Optional<Offer> existingOffer = offerRepository.findBySourceAndSourceOfferId(source, sourceOfferId);
+        Offer offer;
 
-        Offer offer = new Offer(
-                shopName,
-                price,
-                product
-        );
+        if(existingOffer.isEmpty()) {
+            Product product = productRepository.findByEAN(EAN)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Product with EAN [%s] not found".formatted(EAN))
+                    );
+
+            offer = new Offer(
+                    source,
+                    sourceOfferId,
+                    price,
+                    product
+            );
+        }
+        else {
+            offer = existingOffer.get();
+            if(!offer.getPrice().equals(price)) {
+                offer.setPrice(price);
+            }
+        }
 
         offerRepository.save(offer);
     }
