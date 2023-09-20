@@ -3,6 +3,7 @@ package com.ecommerce.service;
 import com.ecommerce.dto.AppUserDto;
 import com.ecommerce.mapper.AppUserMapper;
 import com.ecommerce.model.AppUser;
+import com.ecommerce.model.ConfirmationToken;
 import com.ecommerce.payload.request.create.CreateAppUserRequest;
 import com.ecommerce.payload.request.update.UpdateAppUserRequest;
 import com.ecommerce.exception.DuplicateResourceException;
@@ -16,7 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class AppUserService implements UserDetailsService {
     private final String USER_NOT_FOUND_MSG = "User with username [%s] not found.";
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ConfirmationTokenService confirmationTokenService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = appUserRepository.findByUsername(username)
@@ -94,7 +98,25 @@ public class AppUserService implements UserDetailsService {
     public void deleteUser(final Long userId) {
         appUserRepository.deleteById(userId);
     }
-    public void enableUser(AppUser appUser) {
+    public String signUpUser(final CreateAppUserRequest request) {
+        Long appUserId = createUser(request);
 
+        AppUser appUser = appUserRepository.findById(appUserId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "User with id [%s] not found".formatted(appUserId))
+                );
+
+        String token = UUID.randomUUID().toString();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                appUser,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(10)
+        );
+
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        return token;
     }
 }

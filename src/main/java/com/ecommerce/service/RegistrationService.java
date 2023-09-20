@@ -16,30 +16,11 @@ import java.util.UUID;
 @Service
 public class RegistrationService {
     private final AppUserService appUserService;
-    private final AppUserRepository appUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
     public String register(CreateAppUserRequest request) {
         //TODO: send email again
-        Long appUserId = appUserService.createUser(request);
-
-        //TODO: Czy to powinno byc tu czy w appUserService?
-        AppUser appUser = appUserRepository.findById(appUserId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "User with id [%s] not found".formatted(appUserId))
-                );
-
-        String token = UUID.randomUUID().toString();
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                token,
-                appUser,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(10)
-        );
-
-        //TODO: bo tu jest uzyty service
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        String token = appUserService.signUpUser(request);
 
         String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
         emailService.send(

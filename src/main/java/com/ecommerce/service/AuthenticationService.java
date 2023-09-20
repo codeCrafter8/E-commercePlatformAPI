@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final AppUserService appUserService;
     public AuthenticationResponse login(AuthenticationRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -25,10 +24,7 @@ public class AuthenticationService {
         );
 
         //Todo: czy to zwracac?
-        /*AppUser principal = (AppUser) authentication.getPrincipal();
-        AppUserDto appUserDto = AppUserMapper.map(principal);*/
-
-        UserDetails userDetails = appUserService.loadUserByUsername(request.username());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         String token = jwtUtil.issueToken(userDetails);
 
