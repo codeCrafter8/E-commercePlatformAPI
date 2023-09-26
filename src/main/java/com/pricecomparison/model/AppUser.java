@@ -3,6 +3,7 @@ package com.pricecomparison.model;
 import com.pricecomparison.enumeration.AppUserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -67,6 +68,21 @@ public class AppUser implements UserDetails {
     private Set<Order> orders;*/
     private boolean locked;
     private boolean enabled;
+    public AppUser(Long id,
+                   String firstName,
+                   String lastName,
+                   String username,
+                   String email,
+                   String password,
+                   AppUserRole appUserRole) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.appUserRole = appUserRole;
+    }
     public AppUser(String firstName,
                    String lastName,
                    String username,

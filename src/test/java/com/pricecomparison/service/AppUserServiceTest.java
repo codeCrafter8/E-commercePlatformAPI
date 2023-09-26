@@ -1,0 +1,192 @@
+package com.pricecomparison.service;
+
+import com.pricecomparison.dto.AppUserDto;
+import com.pricecomparison.enumeration.AppUserRole;
+import com.pricecomparison.exception.DuplicateResourceException;
+import com.pricecomparison.exception.ResourceNotFoundException;
+import com.pricecomparison.mapper.AppUserMapper;
+import com.pricecomparison.model.AppUser;
+import com.pricecomparison.payload.request.create.CreateAppUserRequest;
+import com.pricecomparison.payload.request.update.UpdateAppUserRequest;
+import com.pricecomparison.repository.AppUserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class AppUserServiceTest {
+    @Mock
+    private AppUserRepository appUserRepository;
+    @Mock
+    private ConfirmationTokenService confirmationTokenService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    private final AppUserMapper appUserMapper = new AppUserMapper();
+    private AppUserService underTest;
+
+    @BeforeEach
+    void setUp() {
+        underTest = new AppUserService(appUserRepository, passwordEncoder, confirmationTokenService, appUserMapper);
+    }
+
+    @Test
+    void canGetAllUsers() {
+        //when
+        underTest.getAllUsers();
+        //then
+        verify(appUserRepository).findAll();
+    }
+
+    @Test
+    void canGetUserById() {
+        //given
+        Long id = 1L;
+        AppUser appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
+        given(appUserRepository.findById(id)).willReturn(Optional.of(appUser));
+        AppUserDto expected = appUserMapper.map(appUser);
+
+        //when
+        AppUserDto actual = underTest.getUserById(id);
+
+        //then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void willThrowWhenGetUserByIdReturnsEmptyOptional() {
+        //given
+        Long id = 1L;
+        given(appUserRepository.findById(id)).willReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.getUserById(id))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("User with id [%s] not found".formatted(id));
+    }
+
+    //TODO: check if it is final
+    @Test
+    void canCreateUser() {
+        //given
+        CreateAppUserRequest createRequest = new CreateAppUserRequest("John", "Doe", "john123", "john@gmail.com", "password");
+        String encodedPassword = "$s175$5";
+        given(passwordEncoder.encode(createRequest.password())).willReturn(encodedPassword);
+        AppUser appUser = appUserMapper.map(createRequest, encodedPassword);
+        given(appUserRepository.save(any())).willReturn(appUser);
+
+        //when
+        underTest.createUser(createRequest);
+
+        //then
+        ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
+        verify(appUserRepository).save(appUserArgumentCaptor.capture());
+        AppUser capturedAppUser = appUserArgumentCaptor.getValue();
+
+        assertThat(capturedAppUser.getId()).isNull();
+        assertThat(capturedAppUser.getFirstName()).isEqualTo(createRequest.firstName());
+        assertThat(capturedAppUser.getLastName()).isEqualTo(createRequest.lastName());
+        assertThat(capturedAppUser.getUsername()).isEqualTo(createRequest.username());
+        assertThat(capturedAppUser.getEmail()).isEqualTo(createRequest.email());
+        assertThat(capturedAppUser.getPassword()).isEqualTo(encodedPassword);
+    }
+
+    @Test
+    void willThrowWhenTryingToCreateEmailAlreadyTaken() {
+        //given
+        CreateAppUserRequest createRequest = new CreateAppUserRequest("John", "Doe", "john123", "john@gmail.com", "password");
+        given(appUserRepository.existsByEmail(anyString()))
+                .willReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.createUser(createRequest))
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessage("Email already taken");
+
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(appUserRepository, never()).save(any());
+    }
+
+    @Test
+    void canUpdateUser() {
+        //given
+        Long id = 1L;
+        AppUser appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
+        UpdateAppUserRequest updateRequest = new UpdateAppUserRequest("Jonathan", "Doerr", "john2@gmail.com");
+        given(appUserRepository.findById(id)).willReturn(Optional.of(appUser));
+
+        //when
+        underTest.updateUser(id, updateRequest);
+
+        //then
+        ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
+        verify(appUserRepository).save(appUserArgumentCaptor.capture());
+        AppUser capturedAppUser = appUserArgumentCaptor.getValue();
+
+        assertThat(capturedAppUser.getFirstName()).isEqualTo(updateRequest.firstName());
+        assertThat(capturedAppUser.getLastName()).isEqualTo(updateRequest.lastName());
+        assertThat(capturedAppUser.getEmail()).isEqualTo(updateRequest.email());
+    }
+
+    @Test
+    void willThrowWhenTryingToUpdateUserNotFound() {
+        //given
+        Long id = 1L;
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.updateUser(id, any()))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("User with id [%s] not found".formatted(id));
+
+        verify(appUserRepository, never()).save(any());
+    }
+
+    @Test
+    void willThrowWhenTryingToUpdateEmailAlreadyTaken() {
+        //given
+        Long id = 1L;
+        AppUser appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
+        UpdateAppUserRequest updateRequest = new UpdateAppUserRequest("John", "Doe", "john2@gmail.com");
+        given(appUserRepository.findById(id)).willReturn(Optional.of(appUser));
+        given(appUserRepository.existsByEmail("john2@gmail.com")).willReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.updateUser(id, updateRequest))
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessage("Email already taken.");
+
+        verify(appUserRepository, never()).save(any());
+    }
+
+    @Test
+    void canDeleteUser() {
+        //given
+        final Long id = 1L;
+
+        //when
+        underTest.deleteUser(id);
+
+        //then
+        verify(appUserRepository).deleteById(id);
+    }
+
+    @Test
+    @Disabled
+    void signUpUser() {
+    }
+}

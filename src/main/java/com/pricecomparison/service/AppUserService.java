@@ -75,8 +75,10 @@ public class AppUserService implements UserDetailsService {
         return user.getId();
     }
 
+    //TODO: updateRequest must have username too
     public void updateUser(final Long userId, final UpdateAppUserRequest updateRequest) {
         // TODO: for JPA use .getReferenceById(customerId) as it does does not bring object into memory and instead a reference
+
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User with id [%s] not found".formatted(userId))
@@ -85,6 +87,7 @@ public class AppUserService implements UserDetailsService {
         user.setFirstName(updateRequest.firstName());
         user.setLastName(updateRequest.lastName());
 
+        //TODO: check username
         if (updateRequest.email() != null && !updateRequest.email().equals(user.getEmail())) {
             if (appUserRepository.existsByEmail(updateRequest.email())) {
                 throw new DuplicateResourceException(
