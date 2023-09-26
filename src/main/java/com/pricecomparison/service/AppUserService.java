@@ -29,6 +29,7 @@ public class AppUserService implements UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
+    private final AppUserMapper appUserMapper;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = appUserRepository.findByUsername(username)
@@ -44,7 +45,7 @@ public class AppUserService implements UserDetailsService {
 
     public List<AppUserDto> getAllUsers() {
         List<AppUser> users = appUserRepository.findAll();
-        return users.stream().map(AppUserMapper::map)
+        return users.stream().map(appUserMapper::map)
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +54,7 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User with id [%s] not found".formatted(userId))
                 );
-        return AppUserMapper.map(user);
+        return appUserMapper.map(user);
     }
 
     public Long createUser(final CreateAppUserRequest createRequest) {
@@ -66,7 +67,7 @@ public class AppUserService implements UserDetailsService {
 
         String password = passwordEncoder.encode(createRequest.password());
 
-        AppUser user = AppUserMapper.map(createRequest, password);
+        AppUser user = appUserMapper.map(createRequest, password);
         user.setEnabled(true);
 
         user = appUserRepository.save(user);

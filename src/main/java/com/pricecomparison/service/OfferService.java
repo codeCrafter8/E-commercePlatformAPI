@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class OfferService {
     private final OfferRepository offerRepository;
     private final ProductRepository productRepository;
+    private final OfferMapper offerMapper;
     public List<OfferDto> getAllOffersByProductId(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -29,7 +30,7 @@ public class OfferService {
         List<Offer> offers = offerRepository.findAllByProduct(product);
         return offers.stream()
                 .sorted(Comparator.comparingDouble(Offer::getPrice))
-                .map(OfferMapper::map)
+                .map(offerMapper::map)
                 .collect(Collectors.toList());
     }
 

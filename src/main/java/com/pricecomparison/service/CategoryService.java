@@ -16,12 +16,13 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
     public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
                 .map(category -> {
                     Long parentId = category.getParent() == null ? -1 : category.getParent().getId();
-                    return CategoryMapper.map(category, parentId);
+                    return categoryMapper.map(category, parentId);
                 })
                 .collect(Collectors.toList());
     }
@@ -33,7 +34,7 @@ public class CategoryService {
                 );
 
         Long parentId = category.getParent() == null ? -1 : category.getParent().getId();
-        return CategoryMapper.map(category, parentId);
+        return categoryMapper.map(category, parentId);
     }
 
     public Long createCategory(CategoryRequest createRequest) {
@@ -45,7 +46,7 @@ public class CategoryService {
                     );
         }
 
-        Category category = CategoryMapper.map(createRequest, parent);
+        Category category = categoryMapper.map(createRequest, parent);
         category = categoryRepository.save(category);
 
         return category.getId();

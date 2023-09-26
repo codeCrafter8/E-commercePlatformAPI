@@ -20,9 +20,10 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(ProductMapper::map)
+        return products.stream().map(productMapper::map)
                 .collect(Collectors.toList());
     }
 
@@ -31,7 +32,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product with id [%s] not found".formatted(productId))
                 );
-        return ProductMapper.map(product);
+        return productMapper.map(product);
     }
 
     public Long createProduct(CreateProductRequest createRequest) {
@@ -40,7 +41,7 @@ public class ProductService {
                         "Category with id [%s] not found".formatted(createRequest.categoryId()))
                 );
 
-        Product product = ProductMapper.map(createRequest, category);
+        Product product = productMapper.map(createRequest, category);
         product = productRepository.save(product);
 
         return product.getId();
