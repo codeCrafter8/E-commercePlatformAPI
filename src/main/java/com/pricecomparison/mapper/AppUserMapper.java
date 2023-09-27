@@ -4,7 +4,9 @@ import com.pricecomparison.dto.AppUserDto;
 import com.pricecomparison.enumeration.AppUserRole;
 import com.pricecomparison.model.AppUser;
 import com.pricecomparison.payload.request.create.CreateAppUserRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public final class AppUserMapper {
     public AppUserDto map(final AppUser appUser) {
         return new AppUserDto(

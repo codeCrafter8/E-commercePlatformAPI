@@ -4,7 +4,9 @@ import com.pricecomparison.dto.ProductDto;
 import com.pricecomparison.model.Category;
 import com.pricecomparison.model.Product;
 import com.pricecomparison.payload.request.create.CreateProductRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductMapper {
     public ProductDto map(final Product product) {
         return new ProductDto(

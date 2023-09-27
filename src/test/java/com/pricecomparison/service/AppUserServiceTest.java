@@ -35,10 +35,16 @@ class AppUserServiceTest {
     private PasswordEncoder passwordEncoder;
     private final AppUserMapper appUserMapper = new AppUserMapper();
     private AppUserService underTest;
+    private AppUser appUser;
+    private CreateAppUserRequest createRequest;
+    private Long id;
 
     @BeforeEach
     void setUp() {
         underTest = new AppUserService(appUserRepository, passwordEncoder, confirmationTokenService, appUserMapper);
+        id = 1L;
+        appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
+        createRequest = new CreateAppUserRequest("John", "Doe", "john123", "john@gmail.com", "password");
     }
 
     @Test
@@ -52,8 +58,6 @@ class AppUserServiceTest {
     @Test
     void canGetUserById() {
         //given
-        Long id = 1L;
-        AppUser appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
         given(appUserRepository.findById(id)).willReturn(Optional.of(appUser));
         AppUserDto expected = appUserMapper.map(appUser);
 
@@ -67,7 +71,6 @@ class AppUserServiceTest {
     @Test
     void willThrowWhenGetUserByIdReturnsEmptyOptional() {
         //given
-        Long id = 1L;
         given(appUserRepository.findById(id)).willReturn(Optional.empty());
 
         //when
@@ -81,7 +84,6 @@ class AppUserServiceTest {
     @Test
     void canCreateUser() {
         //given
-        CreateAppUserRequest createRequest = new CreateAppUserRequest("John", "Doe", "john123", "john@gmail.com", "password");
         String encodedPassword = "$s175$5";
         given(passwordEncoder.encode(createRequest.password())).willReturn(encodedPassword);
         AppUser appUser = appUserMapper.map(createRequest, encodedPassword);
@@ -106,7 +108,6 @@ class AppUserServiceTest {
     @Test
     void willThrowWhenTryingToCreateEmailAlreadyTaken() {
         //given
-        CreateAppUserRequest createRequest = new CreateAppUserRequest("John", "Doe", "john123", "john@gmail.com", "password");
         given(appUserRepository.existsByEmail(anyString()))
                 .willReturn(true);
 
@@ -123,8 +124,6 @@ class AppUserServiceTest {
     @Test
     void canUpdateUser() {
         //given
-        Long id = 1L;
-        AppUser appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
         UpdateAppUserRequest updateRequest = new UpdateAppUserRequest("Jonathan", "Doerr", "john2@gmail.com");
         given(appUserRepository.findById(id)).willReturn(Optional.of(appUser));
 
@@ -143,9 +142,6 @@ class AppUserServiceTest {
 
     @Test
     void willThrowWhenTryingToUpdateUserNotFound() {
-        //given
-        Long id = 1L;
-
         //when
         //then
         assertThatThrownBy(() -> underTest.updateUser(id, any()))
@@ -158,8 +154,6 @@ class AppUserServiceTest {
     @Test
     void willThrowWhenTryingToUpdateEmailAlreadyTaken() {
         //given
-        Long id = 1L;
-        AppUser appUser = new AppUser(id, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
         UpdateAppUserRequest updateRequest = new UpdateAppUserRequest("John", "Doe", "john2@gmail.com");
         given(appUserRepository.findById(id)).willReturn(Optional.of(appUser));
         given(appUserRepository.existsByEmail("john2@gmail.com")).willReturn(true);
@@ -175,9 +169,6 @@ class AppUserServiceTest {
 
     @Test
     void canDeleteUser() {
-        //given
-        final Long id = 1L;
-
         //when
         underTest.deleteUser(id);
 

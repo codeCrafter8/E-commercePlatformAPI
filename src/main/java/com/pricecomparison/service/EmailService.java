@@ -3,13 +3,14 @@ package com.pricecomparison.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 //TODO: do i have to have an interface to it?
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class EmailService {
     //TODO: add logger?
