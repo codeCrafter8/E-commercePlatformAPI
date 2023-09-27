@@ -39,8 +39,8 @@ public class Product {
     @Size(min = 5, message = "Description must contains at least 5 characters.")
     private String description;*/
     @ManyToOne(
-            optional = false,
-            cascade = CascadeType.ALL)
+            optional = false
+    )
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     @NotBlank(message = "ean")

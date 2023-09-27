@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("api/v1/products")
 public class ProductController {
     private final ProductService productService;
-    //TODO: return ProductDto or Product?
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<ProductDto> products = productService.getAllProducts();

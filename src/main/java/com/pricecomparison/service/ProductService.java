@@ -61,6 +61,7 @@ public class ProductService {
 
         product.setTitle(updateRequest.title());
         product.setCategory(category);
+        product.setEAN(updateRequest.EAN());
 
         productRepository.save(product);
     }

@@ -51,8 +51,6 @@ public class AppUserControllerTest {
         );
         appUserRepository.saveAll(users);
 
-        //TODO: header authorization or with mock user
-
         //when
         ResultActions response = mockMvc.perform(get("/api/v1/users"));
 
