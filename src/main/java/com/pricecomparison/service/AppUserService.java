@@ -104,18 +104,23 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.deleteById(userId);
     }
     public String signUpUser(final CreateAppUserRequest request) {
-        Long appUserId = createUser(request);
+        final boolean userExists = appUserRepository.existsByEmail(request.email());
+        if(userExists){
+            throw new DuplicateResourceException("Email already taken");
+        }
 
-        AppUser appUser = appUserRepository.findById(appUserId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "User with id [%s] not found".formatted(appUserId))
-                );
+        //TODO: add username check
+
+        String password = passwordEncoder.encode(request.password());
+
+        AppUser user = appUserMapper.map(request, password);
+        user = appUserRepository.save(user);
 
         String token = UUID.randomUUID().toString();
 
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
-                appUser,
+                user,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(10)
         );
