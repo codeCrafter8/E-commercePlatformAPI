@@ -114,7 +114,7 @@ public class AppUserService implements UserDetailsService {
         String password = passwordEncoder.encode(request.password());
 
         AppUser user = appUserMapper.map(request, password);
-        user = appUserRepository.save(user);
+        appUserRepository.save(user);
 
         String token = UUID.randomUUID().toString();
 

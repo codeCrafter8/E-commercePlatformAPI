@@ -10,7 +10,6 @@ import com.pricecomparison.payload.request.create.CreateAppUserRequest;
 import com.pricecomparison.payload.request.update.UpdateAppUserRequest;
 import com.pricecomparison.repository.AppUserRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -80,17 +79,15 @@ class AppUserServiceTest {
                 .hasMessage("User with id [%s] not found".formatted(id));
     }
 
-    //TODO: check if it is final
     @Test
     void canCreateUser() {
         //given
         String encodedPassword = "$s175$5";
         given(passwordEncoder.encode(createRequest.password())).willReturn(encodedPassword);
-        AppUser appUser = appUserMapper.map(createRequest, encodedPassword);
-        given(appUserRepository.save(any())).willReturn(appUser);
+        given(appUserRepository.save(any(AppUser.class))).willReturn(appUser);
 
         //when
-        underTest.createUser(createRequest);
+        Long returnedId = underTest.createUser(createRequest);
 
         //then
         ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
@@ -103,6 +100,8 @@ class AppUserServiceTest {
         assertThat(capturedAppUser.getUsername()).isEqualTo(createRequest.username());
         assertThat(capturedAppUser.getEmail()).isEqualTo(createRequest.email());
         assertThat(capturedAppUser.getPassword()).isEqualTo(encodedPassword);
+
+        assertThat(returnedId).isEqualTo(appUser.getId());
     }
 
     @Test
@@ -177,7 +176,43 @@ class AppUserServiceTest {
     }
 
     @Test
-    @Disabled
-    void signUpUser() {
+    void canSignUpUser() {
+        //given
+        String encodedPassword = "$s175$5";
+        given(passwordEncoder.encode(createRequest.password())).willReturn(encodedPassword);
+
+        //when
+        String token = underTest.signUpUser(createRequest);
+
+        //then
+        ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
+        verify(appUserRepository).save(appUserArgumentCaptor.capture());
+        AppUser capturedAppUser = appUserArgumentCaptor.getValue();
+
+        assertThat(capturedAppUser.getId()).isNull();
+        assertThat(capturedAppUser.getFirstName()).isEqualTo(createRequest.firstName());
+        assertThat(capturedAppUser.getLastName()).isEqualTo(createRequest.lastName());
+        assertThat(capturedAppUser.getUsername()).isEqualTo(createRequest.username());
+        assertThat(capturedAppUser.getEmail()).isEqualTo(createRequest.email());
+        assertThat(capturedAppUser.getPassword()).isEqualTo(encodedPassword);
+
+        assertThat(token).isNotNull();
+    }
+
+    @Test
+    void willThrowWhenTryingToSignUpEmailAlreadyTaken() {
+        //given
+        given(appUserRepository.existsByEmail(anyString()))
+                .willReturn(true);
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.signUpUser(createRequest))
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessage("Email already taken");
+
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(appUserRepository, never()).save(any());
+        verify(confirmationTokenService, never()).saveConfirmationToken(any());
     }
 }
