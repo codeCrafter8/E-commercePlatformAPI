@@ -30,7 +30,7 @@ public class CategoryService {
     public CategoryDto getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Product with id [%s] not found".formatted(categoryId))
+                        "Category with id [%s] not found".formatted(categoryId))
                 );
 
         Long parentId = category.getParent() == null ? -1 : category.getParent().getId();
@@ -53,6 +53,8 @@ public class CategoryService {
     }
 
     public void updateCategory(Long categoryId, CategoryRequest updateRequest) {
+        //TODO: what about parent id?
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Category with id [%s] not found".formatted(categoryId))
