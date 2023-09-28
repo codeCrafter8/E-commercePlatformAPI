@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -27,9 +29,8 @@ public class ConfirmationToken {
     private Long id;
     @NotBlank
     private String token;
-    @ManyToOne(
-            cascade = CascadeType.ALL
-    )
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(
             name = "app_user_id",
             nullable = false
