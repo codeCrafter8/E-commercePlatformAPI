@@ -54,13 +54,22 @@ public class Product {
     private Order order;*/
     /*@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Offer> offers;*/
-
-    //TODO: shipment size?
+    public Product(
+            Long id,
+            String title,
+            Category category,
+            String EAN
+    ) {
+        this.id = id;
+        this.title = title;
+        this.category = category;
+        this.EAN = EAN;
+    }
     public Product(
             String title,
             Category category,
             String EAN
-    ){
+    ) {
         this.title = title;
         this.category = category;
         this.EAN = EAN;

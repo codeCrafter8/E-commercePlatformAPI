@@ -36,6 +36,8 @@ public class ProductService {
     }
 
     public Long createProduct(CreateProductRequest createRequest) {
+        //TODO: ean already taken?
+
         Category category = categoryRepository.findById(createRequest.categoryId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Category with id [%s] not found".formatted(createRequest.categoryId()))

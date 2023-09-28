@@ -39,9 +39,18 @@ public class Category {
     //@OrderBy("title asc")
     private Set<Category> children;*/
     public Category(
+            Long id,
             String title,
             Category parent
-    ){
+    ) {
+        this.id = id;
+        this.title = title;
+        this.parent = parent;
+    }
+    public Category(
+            String title,
+            Category parent
+    ) {
         this.title = title;
         this.parent = parent;
     }
