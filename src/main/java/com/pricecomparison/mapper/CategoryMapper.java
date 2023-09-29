@@ -20,4 +20,11 @@ public class CategoryMapper {
                 parentId
         );
     }
+
+    public Category map(final CategoryDto categoryDto, final Category parent) {
+        return new Category(
+                categoryDto.title(),
+                parent
+        );
+    }
 }

@@ -7,7 +7,6 @@ import com.pricecomparison.model.Category;
 import com.pricecomparison.model.Product;
 import com.pricecomparison.payload.request.create.CreateProductRequest;
 import com.pricecomparison.payload.request.update.UpdateProductRequest;
-import com.pricecomparison.repository.CategoryRepository;
 import com.pricecomparison.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,16 +20,16 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
     @Mock
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
     private final ProductMapper productMapper = new ProductMapper();
     private ProductService underTest;
     private Category category;
@@ -40,7 +39,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new ProductService(productRepository, categoryRepository, productMapper);
+        underTest = new ProductService(productRepository, categoryService, productMapper);
         id = 1L;
         category = new Category(id, "Electronics", null);
         product = new Product(id, "HUB USB Unitek 4x USB-A 3.1 Gen1", category, "4894160044402");
@@ -83,7 +82,7 @@ class ProductServiceTest {
     @Test
     void canCreateProduct() {
         //given
-        given(categoryRepository.findById(id)).willReturn(Optional.of(category));
+        given(categoryService.getCategoryEntityById(id)).willReturn(category);
         given(productRepository.save(any(Product.class))).willReturn(product);
 
         //when
@@ -102,13 +101,11 @@ class ProductServiceTest {
         assertThat(returnedId).isEqualTo(product.getId());
     }
 
-    //TODO: when category is not found but shouldn't i use category service instead of category repository?
-
     @Test
     void canUpdateProduct() {
         //given
         UpdateProductRequest updateRequest = new UpdateProductRequest("HUB USB Unitek 4x USB-A 3.1 Gen2", category.getId(), "345667233445");
-        given(categoryRepository.findById(id)).willReturn(Optional.of(category));
+        given(categoryService.getCategoryEntityById(id)).willReturn(category);
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
         //when
@@ -142,5 +139,31 @@ class ProductServiceTest {
 
         //then
         verify(productRepository).deleteById(id);
+    }
+
+    @Test
+    void canGetProductByEAN() {
+        //given
+        given(productRepository.findByEAN(product.getEAN())).willReturn(Optional.of(product));
+
+        //when
+        Product actual = underTest.getProductByEAN(product.getEAN());
+
+        //then
+        assertThat(actual).usingRecursiveComparison().isEqualTo(product);
+        verify(productRepository).findByEAN(anyString());
+        verifyNoMoreInteractions(productRepository);
+    }
+
+    @Test
+    void willThrowWhenGetProductByEANReturnsEmptyOptional() {
+        //given
+        given(productRepository.findByEAN(product.getEAN())).willReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.getProductByEAN(product.getEAN()))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Product with EAN [%s] not found".formatted(product.getEAN()));
     }
 }

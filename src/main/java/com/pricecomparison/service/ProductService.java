@@ -7,7 +7,6 @@ import com.pricecomparison.model.Category;
 import com.pricecomparison.model.Product;
 import com.pricecomparison.payload.request.create.CreateProductRequest;
 import com.pricecomparison.payload.request.update.UpdateProductRequest;
-import com.pricecomparison.repository.CategoryRepository;
 import com.pricecomparison.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
     private final ProductMapper productMapper;
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
@@ -38,10 +37,7 @@ public class ProductService {
     public Long createProduct(CreateProductRequest createRequest) {
         //TODO: ean already taken?
 
-        Category category = categoryRepository.findById(createRequest.categoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Category with id [%s] not found".formatted(createRequest.categoryId()))
-                );
+        Category category = categoryService.getCategoryEntityById(createRequest.categoryId());
 
         Product product = productMapper.map(createRequest, category);
         product = productRepository.save(product);
@@ -56,10 +52,7 @@ public class ProductService {
                         "Product with id [%s] not found".formatted(productId))
                 );
 
-        Category category = categoryRepository.findById(updateRequest.categoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Category with id [%s] not found".formatted(updateRequest.categoryId()))
-                );
+        Category category = categoryService.getCategoryEntityById(updateRequest.categoryId());
 
         product.setTitle(updateRequest.title());
         product.setCategory(category);
@@ -70,5 +63,13 @@ public class ProductService {
 
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
+    }
+    public Product getProductByEAN(String EAN) {
+        //TODO: EAN should be unique
+
+        return productRepository.findByEAN(EAN)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Product with EAN [%s] not found".formatted(EAN))
+                );
     }
 }

@@ -68,4 +68,12 @@ public class CategoryService {
     public void deleteCategory(Long categoryId) {
         categoryRepository.deleteById(categoryId);
     }
+
+    //TODO: is better way?
+    public Category getCategoryEntityById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Category with id [%s] not found".formatted(categoryId))
+                );
+    }
 }

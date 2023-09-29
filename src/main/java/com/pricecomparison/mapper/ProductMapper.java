@@ -17,11 +17,21 @@ public class ProductMapper {
         );
     }
 
-    public Product map(final CreateProductRequest createRequest, final Category category){
+    public Product map(final CreateProductRequest createRequest, final Category category) {
         return new Product(
                 createRequest.title(),
                 category,
                 createRequest.EAN()
         );
+    }
+
+    public Product map(final ProductDto productDto, final Category category) {
+        Product product = new Product(
+                productDto.title(),
+                category,
+                productDto.EAN()
+        );
+        System.out.println(product.getId());
+        return product;
     }
 }
