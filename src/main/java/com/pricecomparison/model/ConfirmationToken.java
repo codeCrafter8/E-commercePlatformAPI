@@ -52,4 +52,17 @@ public class ConfirmationToken {
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
+    public ConfirmationToken(
+            Long id,
+            String token,
+            AppUser appUser,
+            LocalDateTime createdAt,
+            LocalDateTime expiresAt
+    ) {
+        this.id = id;
+        this.token = token;
+        this.appUser = appUser;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
+    }
 }

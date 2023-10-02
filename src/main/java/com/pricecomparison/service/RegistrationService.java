@@ -29,6 +29,24 @@ public class RegistrationService {
         return token;
     }
 
+    //TODO: transactional?
+    @Transactional
+    public void confirm(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenService.getConfirmationToken(token);
+
+        if(confirmationToken.getConfirmedAt() != null) {
+            throw new IllegalStateException("Email is already confirmed.");
+        }
+
+        if(confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Token is already expired");
+        }
+
+        confirmationToken.setConfirmedAt(LocalDateTime.now());
+
+        confirmationToken.getAppUser().setEnabled(true);
+    }
+
     private String buildEmail(String firstName, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
@@ -96,23 +114,5 @@ public class RegistrationService {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
-    }
-
-    //TODO: transactional?
-    @Transactional
-    public void confirm(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService.getConfirmationToken(token);
-
-        if(confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("Email is already confirmed.");
-        }
-
-        if(confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Token is already expired");
-        }
-
-        confirmationToken.setConfirmedAt(LocalDateTime.now());
-
-        confirmationToken.getAppUser().setEnabled(true);
     }
 }
