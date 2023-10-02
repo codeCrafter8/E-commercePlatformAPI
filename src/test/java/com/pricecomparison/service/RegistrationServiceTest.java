@@ -4,6 +4,7 @@ import com.pricecomparison.enumeration.AppUserRole;
 import com.pricecomparison.model.AppUser;
 import com.pricecomparison.model.ConfirmationToken;
 import com.pricecomparison.payload.request.create.CreateAppUserRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -28,6 +30,21 @@ class RegistrationServiceTest {
     private EmailService emailService;
     @InjectMocks
     private RegistrationService underTest;
+    private ConfirmationToken confirmationToken;
+    private String token;
+
+    @BeforeEach
+    void setUp() {
+        AppUser appUser = new AppUser(1L, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
+        token = "z3jsS6Jd754zQsxYXpOVKOliy0mDd1tUK7lFFXebI7i5MmgmWbkZ79xctb5z8COV";
+        confirmationToken = new ConfirmationToken(
+                1L,
+                token,
+                appUser,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(10)
+        );
+    }
 
     @Test
     void canRegister() {
@@ -48,16 +65,6 @@ class RegistrationServiceTest {
     @Test
     void canConfirm() {
         //given
-        AppUser appUser = new AppUser(1L, "John", "Doe", "john123", "john@gmail.com", "password", AppUserRole.USER);
-        String token = "z3jsS6Jd754zQsxYXpOVKOliy0mDd1tUK7lFFXebI7i5MmgmWbkZ79xctb5z8COV";
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                1L,
-                token,
-                appUser,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(10)
-        );
-
         given(confirmationTokenService.getConfirmationTokenByToken(token)).willReturn(confirmationToken);
 
         //when
@@ -69,4 +76,29 @@ class RegistrationServiceTest {
     }
 
     //TODO: edge tests
+    @Test
+    void willThrowWhenTryingToConfirmEmailIsAlreadyConfirmed() {
+        //given
+        confirmationToken.setConfirmedAt(LocalDateTime.now());
+        given(confirmationTokenService.getConfirmationTokenByToken(token)).willReturn(confirmationToken);
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.confirm(token))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Email is already confirmed.");
+    }
+
+    @Test
+    void willThrowWhenTryingToConfirmEmailIsAlreadyExpired() {
+        //given
+        confirmationToken.setExpiresAt(LocalDateTime.now().minusMinutes(1));
+        given(confirmationTokenService.getConfirmationTokenByToken(token)).willReturn(confirmationToken);
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.confirm(token))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Token is already expired.");
+    }
 }
