@@ -7,6 +7,7 @@ import com.pricecomparison.model.Product;
 import com.pricecomparison.repository.CategoryRepository;
 import com.pricecomparison.repository.OfferRepository;
 import com.pricecomparison.repository.ProductRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,6 +37,10 @@ class OfferControllerTest {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @AfterEach
+    void tearDown() {
+        offerRepository.deleteAll();
+    }
     @Test
     void getAllOffers() throws Exception {
         //given

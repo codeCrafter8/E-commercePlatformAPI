@@ -12,7 +12,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 class ProductRepositoryTest {
-
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Autowired
     private ProductRepository underTest;
 
@@ -22,6 +23,7 @@ class ProductRepositoryTest {
         Category category = new Category("Electronics", null);
         Product product1 = new Product("HUB USB Unitek 4x USB-A 3.1 Gen1", category, "4894160044402");
         Product product2 = new Product("JBL JBLT110BLK", category, "6925281918926");
+        categoryRepository.save(category);
         underTest.save(product1);
         underTest.save(product2);
 
