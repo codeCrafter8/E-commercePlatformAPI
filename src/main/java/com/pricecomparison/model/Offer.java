@@ -34,6 +34,19 @@ public class Offer {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     public Offer(
+            Long id,
+            String source,
+            String sourceOfferId,
+            Float price,
+            Product product
+    ) {
+        this.id = id;
+        this.source = source;
+        this.sourceOfferId = sourceOfferId;
+        this.price = price;
+        this.product = product;
+    }
+    public Offer(
             String source,
             String sourceOfferId,
             Float price,
