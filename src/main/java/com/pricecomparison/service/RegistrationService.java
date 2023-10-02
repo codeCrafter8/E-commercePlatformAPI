@@ -32,7 +32,7 @@ public class RegistrationService {
     //TODO: transactional?
     @Transactional
     public void confirm(String token) {
-        ConfirmationToken confirmationToken = confirmationTokenService.getConfirmationToken(token);
+        ConfirmationToken confirmationToken = confirmationTokenService.getConfirmationTokenByToken(token);
 
         if(confirmationToken.getConfirmedAt() != null) {
             throw new IllegalStateException("Email is already confirmed.");

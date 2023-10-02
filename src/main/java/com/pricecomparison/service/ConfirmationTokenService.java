@@ -14,7 +14,7 @@ public class ConfirmationTokenService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
-    public ConfirmationToken getConfirmationToken(String token) {
+    public ConfirmationToken getConfirmationTokenByToken(String token) {
         return confirmationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Confirmation token with token [%s] not found".formatted(token)

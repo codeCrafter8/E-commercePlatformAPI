@@ -58,7 +58,7 @@ class RegistrationServiceTest {
                 LocalDateTime.now().plusMinutes(10)
         );
 
-        given(confirmationTokenService.getConfirmationToken(token)).willReturn(confirmationToken);
+        given(confirmationTokenService.getConfirmationTokenByToken(token)).willReturn(confirmationToken);
 
         //when
         underTest.confirm(token);
@@ -67,4 +67,6 @@ class RegistrationServiceTest {
         assertNotNull(confirmationToken.getConfirmedAt());
         assertTrue(confirmationToken.getAppUser().isEnabled());
     }
+
+    //TODO: edge tests
 }
