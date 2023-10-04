@@ -1,11 +1,11 @@
 package com.pricecomparison.service;
 
 import com.pricecomparison.dto.OfferDto;
-import com.pricecomparison.dto.PriceHistoryDto;
-import com.pricecomparison.mapper.PriceHistoryMapper;
-import com.pricecomparison.model.PriceHistory;
+import com.pricecomparison.dto.PriceEntryDto;
+import com.pricecomparison.mapper.PriceEntryMapper;
+import com.pricecomparison.model.PriceEntry;
 import com.pricecomparison.model.Product;
-import com.pricecomparison.repository.PriceHistoryRepository;
+import com.pricecomparison.repository.PriceEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class PriceHistoryService {
-    private final PriceHistoryRepository priceHistoryRepository;
+public class PriceEntryService {
+    private final PriceEntryRepository priceEntryRepository;
     private final ProductService productService;
     private final OfferService offerService;
-    private final PriceHistoryMapper priceHistoryMapper;
+    private final PriceEntryMapper priceEntryMapper;
 
     public void createPriceHistory(LocalDate date) {
         List<Product> products = productService.getAllProductsEntities();
@@ -34,19 +34,19 @@ public class PriceHistoryService {
 
             //TODO: how to show on chart that there are no offers
 
-            PriceHistory priceHistory = new PriceHistory(
+            PriceEntry priceEntry = new PriceEntry(
                     date,
                     minPrice,
                     product
             );
 
-            priceHistoryRepository.save(priceHistory);
+            priceEntryRepository.save(priceEntry);
         }
     }
 
-    public List<PriceHistoryDto> getPriceHistoryList() {
-        List<PriceHistory> priceHistoryList = priceHistoryRepository.findAll();
-        return priceHistoryList.stream().map(priceHistoryMapper::map)
+    public List<PriceEntryDto> getAllPriceEntries() {
+        List<PriceEntry> priceEntries = priceEntryRepository.findAll();
+        return priceEntries.stream().map(priceEntryMapper::map)
                 .collect(Collectors.toList());
     }
 }

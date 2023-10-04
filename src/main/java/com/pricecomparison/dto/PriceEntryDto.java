@@ -2,7 +2,7 @@ package com.pricecomparison.dto;
 
 import java.time.LocalDate;
 
-public record PriceHistoryDto(
+public record PriceEntryDto(
         Long id,
         LocalDate date,
         Float price,

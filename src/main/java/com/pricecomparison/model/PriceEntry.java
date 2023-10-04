@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Entity
-public class PriceHistory {
+public class PriceEntry {
     @SequenceGenerator(
             name = "price_history_sequence",
             sequenceName = "price_history_sequence",
@@ -28,7 +28,7 @@ public class PriceHistory {
     )
     @JoinColumn(name = "product_id")
     private Product product;
-    public PriceHistory(
+    public PriceEntry(
             LocalDate date,
             Float price,
             Product product

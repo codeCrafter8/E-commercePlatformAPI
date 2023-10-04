@@ -1,6 +1,6 @@
 package com.pricecomparison.fetcher;
 
-import com.pricecomparison.service.PriceHistoryService;
+import com.pricecomparison.service.PriceEntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Component
 public class FetcherScheduler {
     private final FetcherManager fetcherManager;
-    private final PriceHistoryService priceHistoryService;
+    private final PriceEntryService priceEntryService;
 
     @Scheduled(fixedRate = 10000)
     //@Scheduled(cron = "0 0 * * * *")
@@ -22,6 +22,6 @@ public class FetcherScheduler {
     @Scheduled(fixedRate = 10500)
     //@Scheduled(cron = "0 1 0 * * *")
     public void createPriceHistory() {
-        priceHistoryService.createPriceHistory(LocalDate.now());
+        priceEntryService.createPriceHistory(LocalDate.now());
     }
 }
