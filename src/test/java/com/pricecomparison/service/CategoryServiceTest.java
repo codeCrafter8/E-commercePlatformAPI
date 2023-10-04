@@ -142,4 +142,28 @@ class CategoryServiceTest {
         //then
         verify(categoryRepository).deleteById(id);
     }
+
+    @Test
+    void canGetCategoryEntityById() {
+        //given
+        given(categoryRepository.findById(id)).willReturn(Optional.of(category));
+
+        //when
+        Category actual = underTest.getCategoryEntityById(id);
+
+        //then
+        assertThat(actual).usingRecursiveComparison().isEqualTo(category);
+    }
+
+    @Test
+    void willThrowWhenGetCategoryEntityByIdReturnsEmptyOptional() {
+        //given
+        given(categoryRepository.findById(id)).willReturn(Optional.empty());
+
+        //when
+        //then
+        assertThatThrownBy(() -> underTest.getCategoryEntityById(id))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Category with id [%s] not found".formatted(id));
+    }
 }

@@ -72,4 +72,9 @@ public class ProductService {
                         "Product with EAN [%s] not found".formatted(EAN))
                 );
     }
+
+    //TODO: is it good
+    public List<Product> getAllProductsEntities() {
+        return productRepository.findAll();
+    }
 }

@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface OfferRepository extends JpaRepository<Offer, Long> {
     List<Offer> findAllByProductId(Long id);
     Optional<Offer> findBySourceAndSourceOfferId(String source, String sourceOfferId);
+    Optional<Offer> findTopByOrderByPriceAsc();
 }
