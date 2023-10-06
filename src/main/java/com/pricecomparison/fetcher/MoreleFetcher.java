@@ -8,6 +8,8 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -16,12 +18,17 @@ public class MoreleFetcher {
     public void fetch(String EAN) {
         //TODO: jak nie po ean to po nazwie?
         String url = "https://www.morele.net/wyszukiwarka/?q=" + EAN;
+
         Document document = null;
         try {
             document = Jsoup.connect(url).get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        String source = "Morele";
+        List<String> sourceOfferIds = new ArrayList<>();
+
         Elements elements = document.select("div.price-new");
         if(!elements.isEmpty()) {
             String priceText = elements.first().text();
@@ -31,8 +38,11 @@ public class MoreleFetcher {
             Float price = Float.valueOf(priceText);
 
             String sourceOfferId = document.getElementsByClass("cat-product card").attr("data-product-id");
+            sourceOfferIds.add(sourceOfferId);
 
-            offerService.createOrUpdateOffer("Morele", sourceOfferId, price, EAN);
+            offerService.createOrUpdateOffer(source, sourceOfferId, price, EAN);
         }
+
+        offerService.deleteAbsentOffers(source, sourceOfferIds);
     }
 }

@@ -9,6 +9,8 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -17,6 +19,7 @@ public class AmazonFetcher {
     public void fetch(String EAN) {
         //TODO: jak nie po ean to po nazwie?
         String url = "https://www.amazon.pl/s/ref=sr_st_featured-rank?keywords=" + EAN;
+
         Document document = null;
         try {
             document = Jsoup.connect(url)
@@ -24,6 +27,10 @@ public class AmazonFetcher {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        String source = "Amazon";
+        List<String> sourceOfferIds = new ArrayList<>();
+
         Elements elements = document.select("span.a-price-whole");
         if(!elements.isEmpty()) {
             //TODO: only first?
@@ -34,8 +41,11 @@ public class AmazonFetcher {
             Float price = Float.valueOf(priceText);
 
             String sourceOfferId = document.getElementsByClass("sg-col-4-of-24 sg-col-4-of-12 s-result-item s-asin sg-col-4-of-16 sg-col s-widget-spacing-small sg-col-4-of-20").attr("data-asin");
+            sourceOfferIds.add(sourceOfferId);
 
-            offerService.createOrUpdateOffer("Amazon", sourceOfferId, price, EAN);
+            offerService.createOrUpdateOffer(source, sourceOfferId, price, EAN);
         }
+
+        offerService.deleteAbsentOffers(source, sourceOfferIds);
     }
 }
