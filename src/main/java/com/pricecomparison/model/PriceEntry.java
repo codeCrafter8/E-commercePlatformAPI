@@ -28,13 +28,16 @@ public class PriceEntry {
     )
     @JoinColumn(name = "product_id")
     private Product product;
+    private boolean present;
     public PriceEntry(
             LocalDate date,
             Float price,
-            Product product
+            Product product,
+            boolean present
     ) {
         this.date = date;
         this.price = price;
         this.product = product;
+        this.present = present;
     }
 }

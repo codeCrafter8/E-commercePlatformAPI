@@ -11,7 +11,8 @@ public class PriceEntryMapper {
                 priceEntry.getId(),
                 priceEntry.getDate(),
                 priceEntry.getPrice(),
-                priceEntry.getProduct().getId()
+                priceEntry.getProduct().getId(),
+                priceEntry.isPresent()
         );
     }
 }

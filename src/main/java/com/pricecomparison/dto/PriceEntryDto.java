@@ -6,6 +6,7 @@ public record PriceEntryDto(
         Long id,
         LocalDate date,
         Float price,
-        Long productId
+        Long productId,
+        boolean present
 ) {
 }
