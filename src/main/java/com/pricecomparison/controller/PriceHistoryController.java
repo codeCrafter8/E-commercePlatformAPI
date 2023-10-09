@@ -3,6 +3,7 @@ package com.pricecomparison.controller;
 import com.pricecomparison.service.PriceHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
@@ -25,9 +26,6 @@ public class PriceHistoryController {
         var imgFile = new ClassPathResource("image/Price-Line-Chart.jpg");
         byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
 
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(bytes);
+        return new ResponseEntity<>(bytes, HttpStatus.OK);
     }
 }
