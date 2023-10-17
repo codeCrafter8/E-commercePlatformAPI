@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 @RequiredArgsConstructor
 @Component
 public class FetcherScheduler {
@@ -19,12 +17,11 @@ public class FetcherScheduler {
     //@Scheduled(cron = "0 0 * * * *")
     public void fetchOffers() {
         fetcherManager.fetchAll();
-        //priceHistoryService.getPriceHistory(1L);
     }
 
     //@Scheduled(fixedRate = 10500)
-    @Scheduled(cron = "0 7 10 * * *")
+    @Scheduled(cron = "0 42 20 * * *")
     public void createPriceEntries() {
-        priceEntryService.createPriceEntries(LocalDate.now());
+        priceEntryService.createPriceEntries();
     }
 }

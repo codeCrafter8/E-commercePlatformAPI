@@ -5,6 +5,7 @@ import com.pricecomparison.payload.request.AuthenticationRequest;
 import com.pricecomparison.payload.request.create.CreateAppUserRequest;
 import com.pricecomparison.repository.AppUserRepository;
 import com.pricecomparison.security.jwt.JwtUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +31,10 @@ class AuthenticationControllerTest {
     private AppUserRepository appUserRepository;
     @Autowired
     private JwtUtil jwtUtil;
+    @AfterEach
+    void tearDown() {
+        appUserRepository.deleteAll();
+    }
     @Test
     void canLogin() throws Exception {
         //given
