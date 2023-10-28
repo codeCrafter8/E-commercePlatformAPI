@@ -53,17 +53,14 @@ public class AppUser implements UserDetails {
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
-    /*@OneToMany(mappedBy="appUser")
-    private Set<Product> products;*/
     //TODO: favorites in controller
     @ManyToMany
     @JoinTable(
             name = "favorites",
             joinColumns = @JoinColumn(name = "app_user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private Set<Product> favoriteProducts;
-    /*@OneToMany(mappedBy = "appUser")
-    private Set<Order> orders;*/
     private boolean locked;
     private boolean enabled;
     public AppUser(Long id,

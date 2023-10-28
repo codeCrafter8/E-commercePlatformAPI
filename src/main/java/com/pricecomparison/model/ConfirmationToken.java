@@ -30,7 +30,9 @@ public class ConfirmationToken {
     @NotBlank
     private String token;
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(
+            action = OnDeleteAction.CASCADE
+    )
     @JoinColumn(
             name = "app_user_id",
             nullable = false

@@ -26,7 +26,9 @@ public class PriceEntry {
     @ManyToOne(
             optional = false
     )
-    @JoinColumn(name = "product_id")
+    @JoinColumn(
+            name = "product_id"
+    )
     private Product product;
     private boolean present;
     public PriceEntry(

@@ -30,8 +30,12 @@ public class Offer {
     //TODO: Many to one optional = false?
     @ManyToOne(
             optional = false,
-            cascade = CascadeType.MERGE)
-    @JoinColumn(name = "product_id", nullable = false)
+            cascade = CascadeType.MERGE
+    )
+    @JoinColumn(
+            name = "product_id",
+            nullable = false
+    )
     private Product product;
     public Offer(
             Long id,

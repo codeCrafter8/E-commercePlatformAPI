@@ -24,20 +24,19 @@ public class Category {
     )
     private Long id;
     @NotBlank
-    @Size(min = 3, message = "Title must contains at least 3 characters.")
+    @Size(
+            min = 3,
+            message = "Title must contains at least 3 characters."
+    )
     private String title;
-    /*@OneToMany(mappedBy="category")
-    private Set<Product> products;*/
     //TODO: co z imageURL?
     //TODO: zostawic?
     //private Boolean enabled;
     @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(
+            name = "parent_id"
+    )
     private Category parent;
-
-    /*@OneToMany(mappedBy = "parent")
-    //@OrderBy("title asc")
-    private Set<Category> children;*/
     public Category(
             Long id,
             String title,
