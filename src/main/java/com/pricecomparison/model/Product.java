@@ -24,36 +24,31 @@ public class Product {
             generator = "product_sequence"
     )
     private Long id;
-    /*@ManyToOne(
-            fetch = FetchType.EAGER,
-            optional = false,
-            cascade = CascadeType.ALL)
-    @JoinColumn(name = "app_user_id", nullable = false)
-    private AppUser appUser;*/
     @NotBlank
-    @Size(min = 3, message = "Title must contains at least 3 characters.")
+    @Size(
+            min = 3,
+            message = "Title must contains at least 3 characters."
+    )
     private String title;
-    /*@NotNull
-    private Float price;*/
-    /*@NotBlank
-    @Size(min = 5, message = "Description must contains at least 5 characters.")
-    private String description;*/
     @ManyToOne(
             optional = false
     )
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(
+            name = "category_id",
+            nullable = false
+    )
     private Category category;
-    @NotBlank(message = "ean")
-    //TODO: unique
+    @NotBlank(
+            message = "ean"
+    )
+    @Column(
+            unique = true
+    )
     private String EAN;
-    /*@Enumerated(EnumType.STRING)
-    private ProductState state;*/
-    @ManyToMany(mappedBy = "favoriteProducts")
+    @ManyToMany(
+            mappedBy = "favoriteProducts"
+    )
     private Set<AppUser> favoredBy;
-    /*@OneToOne(mappedBy = "product")
-    private Order order;*/
-    /*@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    private Set<Offer> offers;*/
     public Product(
             Long id,
             String title,

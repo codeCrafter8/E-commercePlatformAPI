@@ -65,8 +65,6 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
     public Product getProductByEAN(String EAN) {
-        //TODO: EAN should be unique
-
         return productRepository.findByEAN(EAN)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product with EAN [%s] not found".formatted(EAN))

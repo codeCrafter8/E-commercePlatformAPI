@@ -3,7 +3,6 @@ package com.pricecomparison.model;
 import com.pricecomparison.enumeration.AppUserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,7 +39,6 @@ public class AppUser implements UserDetails {
     )
     @NotBlank
     private String username;
-    //TODO: czy zostawic taka walidacje unique?
     @Column(
             unique = true
     )
