@@ -17,13 +17,16 @@ import java.util.List;
 public class AmazonFetcher {
     private final OfferService offerService;
     public void fetch(String EAN) {
-        //TODO: jak nie po ean to po nazwie?
-        String url = "https://www.amazon.pl/s/ref=sr_st_featured-rank?keywords=" + EAN;
+        String url = "https://www.amazon.pl/s?k=" + EAN;
 
-        Document document = null;
+        Document document;
         try {
             document = Jsoup.connect(url)
-                    .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:49.0) Gecko/20100101 Firefox/49.0").ignoreHttpErrors(true).followRedirects(true).timeout(100000).get();
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36")
+                    .ignoreHttpErrors(true)
+                    .followRedirects(true)
+                    .timeout(100000)
+                    .get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -33,11 +36,13 @@ public class AmazonFetcher {
 
         Elements elements = document.select("span.a-price-whole");
         if(!elements.isEmpty()) {
-            //TODO: only first?
             Element priceWholeElement = elements.first();
             Element priceFractionElement = document.select("span.a-price-fraction").first();
-            String priceText = priceWholeElement.text().substring(0, priceWholeElement.text().length() - 1) +
-                    "." + priceFractionElement.text();
+
+            String reducedPriceWholeElementText = priceWholeElement != null ? priceWholeElement.text().substring(0, priceWholeElement.text().length() - 1) : "";
+            String priceFractionElementText = priceFractionElement != null ? priceFractionElement.text() : "";
+
+            String priceText = reducedPriceWholeElementText + "." + priceFractionElementText;
             Float price = Float.valueOf(priceText);
 
             String sourceOfferId = document.getElementsByClass("sg-col-4-of-24 sg-col-4-of-12 s-result-item s-asin sg-col-4-of-16 sg-col s-widget-spacing-small sg-col-4-of-20").attr("data-asin");
