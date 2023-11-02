@@ -35,18 +35,20 @@ public class EbayFetcher {
                 .header("X-EBAY-SOA-GLOBAL-ID", "EBAY-PL")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
-        HttpResponse<String> response = null;
 
+        HttpResponse<String> response = null;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
+        String source = "Ebay";
         List<String> sourceOfferIds = new ArrayList<>();
 
         if(response != null && getCount(response.body()) > 0) {
             JSONArray items = getItems(response.body());
+
             for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
 
@@ -55,11 +57,11 @@ public class EbayFetcher {
                 String sourceOfferId = getSourceOfferId(item);
                 sourceOfferIds.add(sourceOfferId);
 
-                offerService.createOrUpdateOffer("Ebay", sourceOfferId, price, EAN);
+                offerService.createOrUpdateOffer(source, sourceOfferId, price, EAN);
             }
         }
 
-        offerService.deleteAbsentOffers("Ebay", sourceOfferIds);
+        offerService.deleteAbsentOffers(source, sourceOfferIds, EAN);
     }
 
     private Float getPrice(JSONObject item) {

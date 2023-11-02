@@ -52,8 +52,10 @@ public class OfferService {
         offerRepository.save(offer);
     }
 
-    public void deleteAbsentOffers(String source, List<String> sourceOfferIds) {
-        List<Offer> absentOffers = offerRepository.findBySourceAndSourceOfferIdNotIn(source, sourceOfferIds);
+    public void deleteAbsentOffers(String source, List<String> sourceOfferIds, String EAN) {
+        Product product = productService.getProductByEAN(EAN);
+        List<Offer> absentOffers = offerRepository.findBySourceAndProductAndSourceOfferIdNotIn(source, product, sourceOfferIds);
+
         offerRepository.deleteAll(absentOffers);
     }
 }
