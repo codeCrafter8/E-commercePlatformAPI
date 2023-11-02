@@ -61,6 +61,7 @@ public class CategoryService {
                 );
 
         category.setTitle(updateRequest.title());
+        category.setImageURL(updateRequest.imageUrl());
 
         categoryRepository.save(category);
     }

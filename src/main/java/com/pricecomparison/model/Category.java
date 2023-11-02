@@ -23,15 +23,14 @@ public class Category {
             generator = "category_sequence"
     )
     private Long id;
+    //TODO: wszedzie te messages?
     @NotBlank
     @Size(
             min = 3,
             message = "Title must contains at least 3 characters."
     )
     private String title;
-    //TODO: co z imageURL?
-    //TODO: zostawic?
-    //private Boolean enabled;
+    private String imageURL;
     @ManyToOne
     @JoinColumn(
             name = "parent_id"
@@ -40,17 +39,21 @@ public class Category {
     public Category(
             Long id,
             String title,
+            String imageURL,
             Category parent
     ) {
         this.id = id;
         this.title = title;
+        this.imageURL = imageURL;
         this.parent = parent;
     }
     public Category(
             String title,
+            String imageURL,
             Category parent
     ) {
         this.title = title;
+        this.imageURL = imageURL;
         this.parent = parent;
     }
 }

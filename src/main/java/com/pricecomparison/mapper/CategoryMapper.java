@@ -10,6 +10,7 @@ public class CategoryMapper {
     public Category map(final CategoryRequest createRequest, final Category parent){
         return new Category(
                 createRequest.title(),
+                createRequest.imageUrl(),
                 parent
         );
     }
@@ -17,6 +18,7 @@ public class CategoryMapper {
         return new CategoryDto(
                 category.getId(),
                 category.getTitle(),
+                category.getImageURL(),
                 parentId
         );
     }
@@ -24,6 +26,7 @@ public class CategoryMapper {
     public Category map(final CategoryDto categoryDto, final Category parent) {
         return new Category(
                 categoryDto.title(),
+                categoryDto.imageUrl(),
                 parent
         );
     }
