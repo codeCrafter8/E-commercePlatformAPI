@@ -16,6 +16,7 @@ import java.util.List;
 @Component
 public class AmazonFetcher {
     private final OfferService offerService;
+
     public void fetch(String EAN) {
         String url = "https://www.amazon.pl/s?k=" + EAN;
 
@@ -51,6 +52,6 @@ public class AmazonFetcher {
             offerService.createOrUpdateOffer(source, sourceOfferId, price, EAN);
         }
 
-        offerService.deleteAbsentOffers(source, sourceOfferIds);
+        offerService.deleteAbsentOffers(source, sourceOfferIds, EAN);
     }
 }

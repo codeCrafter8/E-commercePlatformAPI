@@ -49,6 +49,12 @@ public class Product {
             mappedBy = "favoriteProducts"
     )
     private Set<AppUser> favoredBy;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "product",
+            cascade = CascadeType.ALL
+    )
+    private Set<Offer> offers;
     public Product(
             Long id,
             String title,

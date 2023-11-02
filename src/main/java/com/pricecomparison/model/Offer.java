@@ -27,7 +27,7 @@ public class Offer {
     @NotBlank
     private String sourceOfferId;
     private Float price;
-    //TODO: Many to one optional = false?
+    //TODO: merge?
     @ManyToOne(
             optional = false,
             cascade = CascadeType.MERGE
