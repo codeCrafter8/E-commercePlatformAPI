@@ -75,7 +75,6 @@ class RegistrationServiceTest {
         assertTrue(confirmationToken.getAppUser().isEnabled());
     }
 
-    //TODO: edge tests
     @Test
     void willThrowWhenTryingToConfirmEmailIsAlreadyConfirmed() {
         //given

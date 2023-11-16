@@ -29,7 +29,6 @@ public class RegistrationService {
         return token;
     }
 
-    //TODO: transactional?
     @Transactional
     public void confirm(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService.getConfirmationTokenByToken(token);

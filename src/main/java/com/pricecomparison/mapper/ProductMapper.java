@@ -26,12 +26,10 @@ public class ProductMapper {
     }
 
     public Product map(final ProductDto productDto, final Category category) {
-        Product product = new Product(
+        return new Product(
                 productDto.title(),
                 category,
                 productDto.EAN()
         );
-        System.out.println(product.getId());
-        return product;
     }
 }
