@@ -1,23 +1,25 @@
 package com.pricecomparison.service;
 
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-//TODO: do i have to have an interface to it?
 @AllArgsConstructor
 @Service
 public class EmailService {
-    //TODO: add logger?
+    private final static Logger LOGGER = LoggerFactory
+            .getLogger(EmailService.class);
+    private final static String FAILED_TO_SEND_EMAIL_MSG = "Failed to send email";
     private final JavaMailSender mailSender;
 
+    @Async
     public void send(String to, String subject, String text) {
-        //TODO: try catch or throws?
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =
@@ -28,7 +30,8 @@ public class EmailService {
             helper.setText(text, true);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new IllegalStateException("Failed to send email");
+            LOGGER.error(FAILED_TO_SEND_EMAIL_MSG, e);
+            throw new IllegalStateException(FAILED_TO_SEND_EMAIL_MSG);
         }
     }
 }

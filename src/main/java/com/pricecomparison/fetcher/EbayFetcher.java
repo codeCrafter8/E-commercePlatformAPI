@@ -4,6 +4,8 @@ import com.pricecomparison.service.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,9 @@ import java.util.List;
 @Component
 public class EbayFetcher {
     private final OfferService offerService;
+    private final static Logger LOGGER = LoggerFactory
+            .getLogger(EbayFetcher.class);
+    private final static String FAILED_TO_SEND_REQUEST_MSG = "Failed to send HTTP request";
     @Value("${ebayAppId}")
     private String appId;
     public void fetch(String EAN) {
@@ -36,12 +41,12 @@ public class EbayFetcher {
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
 
-        HttpResponse<String> response = null;
-        //TODO: try like this?
+        HttpResponse<String> response;
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error(FAILED_TO_SEND_REQUEST_MSG, e);
+            throw new IllegalStateException(FAILED_TO_SEND_REQUEST_MSG);
         }
 
         String source = "Ebay";

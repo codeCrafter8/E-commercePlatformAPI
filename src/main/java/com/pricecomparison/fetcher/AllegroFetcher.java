@@ -1,5 +1,7 @@
 package com.pricecomparison.fetcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,9 @@ import java.net.http.HttpResponse;
 
 @Component
 public class AllegroFetcher {
+    private final static Logger LOGGER = LoggerFactory
+            .getLogger(AllegroFetcher.class);
+    private final static String FAILED_TO_SEND_REQUEST_MSG = "Failed to send HTTP request";
     @Value("${allegroToken}")
     private String token;
     public void fetch() {
@@ -27,7 +32,8 @@ public class AllegroFetcher {
         try {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error(FAILED_TO_SEND_REQUEST_MSG, e);
+            throw new IllegalStateException(FAILED_TO_SEND_REQUEST_MSG);
         }
     }
 }
