@@ -10,7 +10,7 @@ services:
     volumes:
       - C:\postgres-container-data:/var/lib/postgresql/data
   app:
-    build: .
+    image: "zuzannawozniak/price-comparison-backend"
     ports:
       - "8080:8080"
     environment:
