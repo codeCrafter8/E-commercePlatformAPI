@@ -13,7 +13,11 @@ public class ProductMapper {
                 product.getId(),
                 product.getTitle(),
                 product.getCategory().getId(),
-                product.getEAN()
+                product.getEAN(),
+                product.getCreatedBy(),
+                product.getCreatedDate(),
+                product.getLastModifiedBy(),
+                product.getLastModifiedDate()
         );
     }
 

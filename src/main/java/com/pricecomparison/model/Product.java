@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-public class Product {
+public class Product extends Auditable {
     @SequenceGenerator(
             name = "product_sequence",
             sequenceName = "product_sequence",
