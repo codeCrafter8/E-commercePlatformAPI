@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthenticationControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -31,10 +32,12 @@ class AuthenticationControllerTest {
     private AppUserRepository appUserRepository;
     @Autowired
     private JwtUtil jwtUtil;
+
     @AfterEach
     void tearDown() {
         appUserRepository.deleteAll();
     }
+
     @Test
     void canLogin() throws Exception {
         //given

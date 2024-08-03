@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser("john")
 class CategoryControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -39,6 +40,7 @@ class CategoryControllerTest {
     void tearDown() {
         categoryRepository.deleteAll();
     }
+
     @Test
     void canGetAllCategories() throws Exception {
         //given
@@ -79,7 +81,7 @@ class CategoryControllerTest {
         //given
         Category category1 = new Category("Electronics", null);
         categoryRepository.save(category1);
-        CategoryRequest createRequest = new CategoryRequest("Smartphones", category1.getId());
+        CategoryRequest createRequest = new CategoryRequest("Smartphones", "", category1.getId());
 
         //when
         //then
@@ -105,7 +107,7 @@ class CategoryControllerTest {
         List<Category> categories = List.of(category1, category2);
         categoryRepository.saveAll(categories);
 
-        CategoryRequest updateRequest = new CategoryRequest("Laptops", category1.getId());
+        CategoryRequest updateRequest = new CategoryRequest("Laptops", "", category1.getId());
 
         //when
         ResultActions response = mockMvc.perform(put("/api/v1/categories/{id}", category2.getId())

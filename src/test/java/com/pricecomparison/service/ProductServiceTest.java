@@ -26,6 +26,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
+
     @Mock
     private ProductRepository productRepository;
     @Mock
@@ -41,7 +42,7 @@ class ProductServiceTest {
     void setUp() {
         underTest = new ProductService(productRepository, categoryService, productMapper);
         id = 1L;
-        category = new Category(id, "Electronics", null);
+        category = new Category(id, "Electronics", "", null);
         product = new Product(id, "HUB USB Unitek 4x USB-A 3.1 Gen1", category, "4894160044402");
         createRequest = new CreateProductRequest("HUB USB Unitek 4x USB-A 3.1 Gen1", category.getId(), "4894160044402");
     }

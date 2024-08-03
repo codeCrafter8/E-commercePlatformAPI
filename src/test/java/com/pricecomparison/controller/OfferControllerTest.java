@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser("john")
 class OfferControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -37,10 +38,12 @@ class OfferControllerTest {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
     @AfterEach
     void tearDown() {
         offerRepository.deleteAll();
     }
+
     @Test
     void getAllOffers() throws Exception {
         //given

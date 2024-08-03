@@ -12,6 +12,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 class ProductRepositoryTest {
+
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired

@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class OfferServiceTest {
+
     @Mock
     private OfferRepository offerRepository;
     @Mock
@@ -34,10 +35,11 @@ class OfferServiceTest {
     void setUp() {
         underTest = new OfferService(offerRepository, productService, offerMapper);
         Long id = 1L;
-        Category category = new Category(id, "Electronics", null);
+        Category category = new Category(id, "Electronics", "", null);
         product = new Product(id, "HUB USB Unitek 4x USB-A 3.1 Gen1", category, "4894160044402");
         offer = new Offer(id, "Ebay", "43788", 15.99F, product);
     }
+
     @Test
     void canGetAllOffersByProductId() {
         //given

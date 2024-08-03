@@ -23,7 +23,6 @@ public class Category {
             generator = "category_sequence"
     )
     private Long id;
-    //TODO: wszedzie te messages?
     @NotBlank
     @Size(
             min = 3,
@@ -54,6 +53,13 @@ public class Category {
     ) {
         this.title = title;
         this.imageURL = imageURL;
+        this.parent = parent;
+    }
+    public Category(
+            String title,
+            Category parent
+    ) {
+        this.title = title;
         this.parent = parent;
     }
 }

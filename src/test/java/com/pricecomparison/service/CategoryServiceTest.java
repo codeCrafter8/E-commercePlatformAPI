@@ -24,6 +24,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
+
     @Mock
     private CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper = new CategoryMapper();
@@ -32,13 +33,14 @@ class CategoryServiceTest {
     private Category category;
     private CategoryRequest request;
     private Long id;
+
     @BeforeEach
     void setUp() {
         underTest = new CategoryService(categoryRepository, categoryMapper);
         id = 1L;
-        parentCategory = new Category(id, "Electronics", null);
-        category = new Category(2L, "Smartphones", parentCategory);
-        request = new CategoryRequest("Smartphones", parentCategory.getId());
+        parentCategory = new Category(id, "Electronics", "", null);
+        category = new Category(2L, "Smartphones", "", parentCategory);
+        request = new CategoryRequest("Smartphones", "", parentCategory.getId());
     }
     @Test
     void canGetAllCategories() {
@@ -108,7 +110,7 @@ class CategoryServiceTest {
     @Test
     void canUpdateCategory() {
         //given
-        CategoryRequest updateRequest = new CategoryRequest("Laptops", parentCategory.getId());
+        CategoryRequest updateRequest = new CategoryRequest("Laptops", "", parentCategory.getId());
         given(categoryRepository.findById(id)).willReturn(Optional.of(category));
 
         //when

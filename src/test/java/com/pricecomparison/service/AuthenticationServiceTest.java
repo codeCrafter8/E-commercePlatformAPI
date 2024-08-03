@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
+
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock

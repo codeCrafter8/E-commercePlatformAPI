@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ConfirmationTokenServiceTest {
+
     @Mock
     private ConfirmationTokenRepository confirmationTokenRepository;
     @InjectMocks

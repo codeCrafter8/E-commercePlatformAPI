@@ -15,6 +15,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 class OfferRepositoryTest {
+
     @Autowired
     private OfferRepository underTest;
 
@@ -72,7 +73,7 @@ class OfferRepositoryTest {
         sourceOfferIds.add("345563");
 
         //when
-        List<Offer> actual = underTest.findBySourceAndSourceOfferIdNotIn(source, sourceOfferIds);
+        List<Offer> actual = underTest.findBySourceAndProductAndSourceOfferIdNotIn(source, product, sourceOfferIds);
 
         //then
         assertThat(actual).satisfiesExactly(

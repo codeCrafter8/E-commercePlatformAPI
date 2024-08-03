@@ -10,6 +10,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class AppUserRepositoryTest {
+
     @Autowired
     private AppUserRepository underTest;
 
