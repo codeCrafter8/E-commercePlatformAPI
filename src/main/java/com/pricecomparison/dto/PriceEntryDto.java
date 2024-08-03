@@ -8,5 +8,4 @@ public record PriceEntryDto(
         Float price,
         Long productId,
         boolean present
-) {
-}
+) {}

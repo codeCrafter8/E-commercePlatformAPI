@@ -4,5 +4,4 @@ public record CategoryRequest(
         String title,
         String imageUrl,
         Long parentId
-) {
-}
+) {}

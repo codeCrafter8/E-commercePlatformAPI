@@ -15,7 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/price-entries")
 public class PriceEntryController {
+
     private final PriceEntryService priceEntryService;
+
     @GetMapping
     public ResponseEntity<List<PriceEntryDto>> getAllPriceEntries() {
         List<PriceEntryDto> priceEntries = priceEntryService.getAllPriceEntries();

@@ -6,6 +6,4 @@ public record AppUserDto(
         String lastName,
         String username,
         String email
-) {
-
-}
+) {}

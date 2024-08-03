@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Service
 public class RegistrationService {
+
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
-    public String register(CreateAppUserRequest request) {
-        //TODO: send email again
 
+    public String register(CreateAppUserRequest request) {
         String token = appUserService.signUpUser(request);
 
         String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;

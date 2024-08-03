@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public final class AppUserMapper {
+
     public AppUserDto map(final AppUser appUser) {
         return new AppUserDto(
                 appUser.getId(),

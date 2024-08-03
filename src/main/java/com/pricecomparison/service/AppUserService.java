@@ -25,17 +25,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class AppUserService implements UserDetailsService {
+
     private final String USER_NOT_FOUND_MSG = "User with username [%s] not found.";
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final AppUserMapper appUserMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
 
-        //TODO: Czy to na pewno ok?
         if(!appUser.isEnabled()) {
             throw new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username));
         }
@@ -63,8 +64,6 @@ public class AppUserService implements UserDetailsService {
             throw new DuplicateResourceException("Email already taken");
         }
 
-        //TODO: add username check
-
         String password = passwordEncoder.encode(createRequest.password());
 
         AppUser user = appUserMapper.map(createRequest, password);
@@ -75,19 +74,15 @@ public class AppUserService implements UserDetailsService {
         return user.getId();
     }
 
-    //TODO: updateRequest must have username too
     public void updateUser(final Long userId, final UpdateAppUserRequest updateRequest) {
-        // TODO: for JPA use .getReferenceById(customerId) as it does does not bring object into memory and instead a reference
-
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User with id [%s] not found".formatted(userId))
                 );
-        //TODO: wonder if password can be changed
+
         user.setFirstName(updateRequest.firstName());
         user.setLastName(updateRequest.lastName());
 
-        //TODO: check username
         if (updateRequest.email() != null && !updateRequest.email().equals(user.getEmail())) {
             if (appUserRepository.existsByEmail(updateRequest.email())) {
                 throw new DuplicateResourceException(
@@ -103,13 +98,12 @@ public class AppUserService implements UserDetailsService {
     public void deleteUser(final Long userId) {
         appUserRepository.deleteById(userId);
     }
+
     public String signUpUser(final CreateAppUserRequest request) {
         final boolean userExists = appUserRepository.existsByEmail(request.email());
         if(userExists){
             throw new DuplicateResourceException("Email already taken");
         }
-
-        //TODO: add username check
 
         String password = passwordEncoder.encode(request.password());
 

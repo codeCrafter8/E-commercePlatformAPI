@@ -20,12 +20,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class EbayFetcher {
+
     private final OfferService offerService;
     private final static Logger LOGGER = LoggerFactory
             .getLogger(EbayFetcher.class);
     private final static String FAILED_TO_SEND_REQUEST_MSG = "Failed to send HTTP request";
     @Value("${ebayAppId}")
     private String appId;
+
     public void fetch(String EAN) {
         String url = "https://svcs.ebay.com/services/search/FindingService/v1?" +
                 "OPERATION-NAME=findItemsAdvanced" +

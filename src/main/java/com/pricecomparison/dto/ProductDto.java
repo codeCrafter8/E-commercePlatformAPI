@@ -11,5 +11,4 @@ public record ProductDto(
         Date createdDate,
         String lastModifiedBy,
         Date lastModifiedDate
-) {
-}
+) {}

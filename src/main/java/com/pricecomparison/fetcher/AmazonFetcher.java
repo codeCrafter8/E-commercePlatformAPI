@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class AmazonFetcher {
+
     private final OfferService offerService;
 
     public void fetch(String EAN) {

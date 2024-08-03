@@ -15,8 +15,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+
     public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
@@ -53,8 +55,6 @@ public class CategoryService {
     }
 
     public void updateCategory(Long categoryId, CategoryRequest updateRequest) {
-        //TODO: what about parent id?
-
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Category with id [%s] not found".formatted(categoryId))
@@ -70,7 +70,6 @@ public class CategoryService {
         categoryRepository.deleteById(categoryId);
     }
 
-    //TODO: is better way?
     public Category getCategoryEntityById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException(

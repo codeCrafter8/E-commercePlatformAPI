@@ -4,5 +4,4 @@ public record CreateProductRequest(
         String title,
         Long categoryId,
         String EAN
-) {
-}
+) {}

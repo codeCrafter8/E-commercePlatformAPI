@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PriceEntryMapper {
+
     public PriceEntryDto map(final PriceEntry priceEntry) {
         return new PriceEntryDto(
                 priceEntry.getId(),

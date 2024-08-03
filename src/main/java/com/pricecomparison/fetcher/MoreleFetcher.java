@@ -15,7 +15,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Component
 public class MoreleFetcher {
+
     private final OfferService offerService;
+
     public void fetch(String EAN) {
         String url = "https://www.morele.net/wyszukiwarka/?q=" + EAN;
 

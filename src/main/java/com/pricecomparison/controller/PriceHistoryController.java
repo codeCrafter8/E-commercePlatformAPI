@@ -15,7 +15,9 @@ import java.io.IOException;
 @RestController
 @RequestMapping("api/v1/price-history")
 public class PriceHistoryController {
+
     private final PriceHistoryService priceHistoryService;
+
     @GetMapping(
             value = "{productId}",
             produces = MediaType.IMAGE_JPEG_VALUE

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Service
 public class EmailService {
+
     private final static Logger LOGGER = LoggerFactory
             .getLogger(EmailService.class);
     private final static String FAILED_TO_SEND_EMAIL_MSG = "Failed to send email";

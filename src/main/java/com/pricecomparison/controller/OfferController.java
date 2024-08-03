@@ -16,7 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/products")
 public class OfferController {
+
     private final OfferService offerService;
+
     @GetMapping("{productId}/offers")
     public ResponseEntity<List<OfferDto>> getAllOffers(@PathVariable Long productId) {
         List<OfferDto> offers = offerService.getAllOffersByProductId(productId);

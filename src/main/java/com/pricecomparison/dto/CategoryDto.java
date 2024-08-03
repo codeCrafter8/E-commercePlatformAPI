@@ -5,5 +5,4 @@ public record CategoryDto(
         String title,
         String imageUrl,
         Long parentId
-) {
-}
+) {}

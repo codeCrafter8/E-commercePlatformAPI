@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final ProductMapper productMapper;
+
     public List<ProductDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream().map(productMapper::map)
@@ -35,8 +37,6 @@ public class ProductService {
     }
 
     public Long createProduct(CreateProductRequest createRequest) {
-        //TODO: ean already taken?
-
         Category category = categoryService.getCategoryEntityById(createRequest.categoryId());
 
         Product product = productMapper.map(createRequest, category);
@@ -46,7 +46,6 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, UpdateProductRequest updateRequest) {
-        // TODO: for JPA use .getReferenceById(customerId) as it does does not bring object into memory and instead a reference
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product with id [%s] not found".formatted(productId))
@@ -64,15 +63,12 @@ public class ProductService {
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
     }
+
     public Product getProductByEAN(String EAN) {
         return productRepository.findByEAN(EAN)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product with EAN [%s] not found".formatted(EAN))
                 );
     }
-
-    //TODO: is it good
-    public List<Product> getAllProductsEntities() {
-        return productRepository.findAll();
-    }
+    
 }

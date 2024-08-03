@@ -10,7 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
     Optional<Product> findByEAN(String EAN);
     @Query("SELECT p.EAN FROM Product p")
     List<String> findAllEANs();
+
 }

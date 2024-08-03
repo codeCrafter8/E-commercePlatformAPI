@@ -20,10 +20,13 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class JwtUtil {
+
     private static final String SECRET_KEY = "secret3423_secret3423_secret3423";
+
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
+
     private Claims getClaims(String token) {
         return Jwts
                 .parserBuilder()
@@ -32,9 +35,11 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     public String getSubject(String token) {
         return getClaims(token).getSubject();
     }
+
     public String issueToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
@@ -46,6 +51,7 @@ public class JwtUtil {
         }
         return issueToken(userDetails.getUsername(), claims);
     }
+
     public String issueToken(
             String subject,
             Map<String, Object> claims
@@ -63,6 +69,7 @@ public class JwtUtil {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
     public boolean isTokenValid(String token, String username) {
         String subject = getSubject(token);
         return subject.equals(username) && !isTokenExpired(token);

@@ -4,5 +4,4 @@ public record UpdateProductRequest(
         String title,
         Long categoryId,
         String EAN
-) {
-}
+) {}

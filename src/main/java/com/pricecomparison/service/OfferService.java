@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class OfferService {
+
     private final OfferRepository offerRepository;
     private final ProductService productService;
     private final OfferMapper offerMapper;
+
     public List<OfferDto> getAllOffersByProductId(Long productId) {
         List<Offer> offers = offerRepository.findAllByProductId(productId);
 

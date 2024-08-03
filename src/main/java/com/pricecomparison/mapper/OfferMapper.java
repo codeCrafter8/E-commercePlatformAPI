@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OfferMapper {
+
     public OfferDto map(final Offer offer) {
         return new OfferDto(
                 offer.getId(),

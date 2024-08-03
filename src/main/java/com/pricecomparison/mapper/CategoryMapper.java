@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryMapper {
+
     public Category map(final CategoryRequest createRequest, final Category parent){
         return new Category(
                 createRequest.title(),

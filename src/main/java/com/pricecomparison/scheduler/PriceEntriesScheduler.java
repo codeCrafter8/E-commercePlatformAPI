@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PriceEntriesScheduler {
+
     private final PriceEntryService priceEntryService;
+
     @Scheduled(cron = "0 2 0 * * *")
     public void createPriceEntries() {
         priceEntryService.createPriceEntries();

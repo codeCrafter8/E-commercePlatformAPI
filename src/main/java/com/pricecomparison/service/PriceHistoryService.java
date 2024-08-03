@@ -13,6 +13,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Service
 public class PriceHistoryService {
+
     private final PriceEntryService priceEntryService;
 
     public void createPriceHistory(Long productId) {

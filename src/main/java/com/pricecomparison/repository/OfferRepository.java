@@ -10,7 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface OfferRepository extends JpaRepository<Offer, Long> {
+
     List<Offer> findAllByProductId(Long id);
     Optional<Offer> findBySourceAndSourceOfferId(String source, String sourceOfferId);
     List<Offer> findBySourceAndProductAndSourceOfferIdNotIn(String source, Product product, List<String> sourceOfferIds);
+
 }

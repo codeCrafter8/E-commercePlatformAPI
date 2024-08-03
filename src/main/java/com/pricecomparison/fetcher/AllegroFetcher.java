@@ -13,11 +13,13 @@ import java.net.http.HttpResponse;
 
 @Component
 public class AllegroFetcher {
+
     private final static Logger LOGGER = LoggerFactory
             .getLogger(AllegroFetcher.class);
     private final static String FAILED_TO_SEND_REQUEST_MSG = "Failed to send HTTP request";
     @Value("${allegroToken}")
     private String token;
+
     public void fetch() {
         String url = "https://api.allegro.pl.allegrosandbox.pl/offers/listing?phrase=Fotel";
 

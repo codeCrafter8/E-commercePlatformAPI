@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductMapper {
+
     public ProductDto map(final Product product) {
         return new ProductDto(
                 product.getId(),

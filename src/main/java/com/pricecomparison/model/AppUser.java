@@ -46,14 +46,12 @@ public class AppUser implements UserDetails {
     private String email;
     @NotBlank
     private String password;
-    //TODO: czy na pewno?
     @Column(
             unique = true
     )
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
-    //TODO: favorites in controller
     @ManyToMany
     @JoinTable(
             name = "favorites",
@@ -96,19 +94,12 @@ public class AppUser implements UserDetails {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(appUserRole.name());
         return Collections.singletonList(authority);
     }
-    public String getFirstName() {
-        return firstName;
-    }
 
-    public String getLastName() {
-        return lastName;
-    }
     @Override
     public String getPassword() {
         return password;
     }
 
-    //TODO: login by username or EMAIL
     @Override
     public String getUsername() {
         return username;

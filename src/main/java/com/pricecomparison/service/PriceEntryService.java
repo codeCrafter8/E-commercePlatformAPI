@@ -1,11 +1,8 @@
 package com.pricecomparison.service;
 
-import com.pricecomparison.dto.OfferDto;
 import com.pricecomparison.dto.PriceEntryDto;
-import com.pricecomparison.exception.ResourceNotFoundException;
 import com.pricecomparison.mapper.PriceEntryMapper;
 import com.pricecomparison.model.PriceEntry;
-import com.pricecomparison.model.Product;
 import com.pricecomparison.repository.PriceEntryRepository;
 import com.pricecomparison.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,18 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class PriceEntryService {
-    private final PriceEntryRepository priceEntryRepository;
-    private final ProductService productService;
-    private final OfferService offerService;
-    private final PriceEntryMapper priceEntryMapper;
 
-    //TODO: usunac to potem
+    private final PriceEntryRepository priceEntryRepository;
+    private final PriceEntryMapper priceEntryMapper;
     private final ProductRepository productRepository;
 
     public void createPriceEntries() {
@@ -108,40 +101,6 @@ public class PriceEntryService {
         priceEntryRepository.save(priceEntry8);
         priceEntryRepository.save(priceEntry9);
         priceEntryRepository.save(priceEntry10);
-
-        /*List<Product> products = productService.getAllProductsEntities();
-
-        for(Product product : products) {
-            List<OfferDto> offers = offerService.getAllOffersByProductId(product.getId());
-
-            Optional<OfferDto> offerWithMinPrice = offers.stream().findFirst();
-
-            Float minPrice;
-            boolean present = true;
-
-            if(offerWithMinPrice.isPresent()) {
-                minPrice = offerWithMinPrice.get().price();
-            }
-            else {
-                present = false;
-                PriceEntry earlierPriceEntry = priceEntryRepository.findByDate(LocalDate.now().minusDays(1))
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                "Price Entry with date [%s] not found".formatted(LocalDate.now().minusDays(1)))
-                        );
-                minPrice = earlierPriceEntry.getPrice();
-            }
-
-            //TODO: how to show on chart that there are no offers
-
-            PriceEntry priceEntry = new PriceEntry(
-                    LocalDate.now(),
-                    minPrice,
-                    product,
-                    present
-            );
-
-            priceEntryRepository.save(priceEntry);
-        }*/
     }
 
     public List<PriceEntryDto> getAllPriceEntries() {

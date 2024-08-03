@@ -23,10 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig {
+
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -38,7 +40,6 @@ public class WebSecurityConfig {
                                 "/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/v1/registration/confirm/**").permitAll()
-                        //.requestMatchers("/<context-path>/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
